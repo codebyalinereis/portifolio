@@ -1,0 +1,156 @@
+// Portfólio Full Stack + Data Developer — Aline Reis
+// Conteúdo do portfólio (gerido em /admin) + demo de dados (ETL NF-e)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Conteúdo do portfólio ────────────────────────────────────────────────
+
+enum SkillCategory {
+  FRONTEND
+  BACKEND
+  DATA
+  DEVOPS
+  DOMAIN
+}
+
+model Project {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  titleEn      String?
+  summary      String   @db.Text
+  summaryEn    String?  @db.Text
+  detail       String?  @db.Text
+  repoUrl      String?
+  liveUrl      String?
+  featured     Boolean  @default(false)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  technologies TechnologyOnProject[]
+}
+
+model Technology {
+  id       String         @id @default(cuid())
+  name     String         @unique
+  category SkillCategory
+  level    Int            @default(3)
+  order    Int            @default(0)
+
+  projects TechnologyOnProject[]
+}
+
+model TechnologyOnProject {
+  projectId    String      @default(cuid())
+  technologyId String
+  project      Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  technology   Technology  @relation(fields: [technologyId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, technologyId])
+  @@index([technologyId])
+}
+
+model Experience {
+  id             String    @id @default(cuid())
+  role           String
+  roleEn         String?
+  company        String
+  startDate      DateTime
+  endDate        DateTime?
+  current        Boolean   @default(false)
+  description    String    @db.Text
+  descriptionEn  String?   @db.Text
+  order          Int       @default(0)
+}
+
+model Education {
+  id           String    @id @default(cuid())
+  title        String
+  titleEn      String?
+  institution  String
+  startDate    DateTime
+  endDate      DateTime?
+  current      Boolean   @default(false)
+  order        Int       @default(0)
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String   @db.Text
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([read, createdAt])
+}
+
+// ── Demo de dados: ETL de notas fiscais (regime atual × IBS/CBS) ─────────
+
+enum DatasetStatus {
+  PROCESSING
+  DONE
+  FAILED
+}
+
+enum NfeCategory {
+  ALIMENTOS
+  COMBUSTIVEIS
+  ELETRONICOS
+  FARMACEUTICO
+  METALURGICO
+  SERVICOS
+  VESTUARIO
+  OUTROS
+}
+
+model Dataset {
+  id               String        @id @default(cuid())
+  name             String
+  originalFilename String?
+  source           String        @default("seed") // "seed" | "upload"
+  status           DatasetStatus @default(PROCESSING)
+  rowCount         Int           @default(0)
+  errorCount       Int           @default(0)
+  errorMessage     String?       @db.Text
+  durationMs       Int?
+  createdAt        DateTime      @default(now())
+  completedAt      DateTime?
+
+  invoices NfeInvoice[]
+
+  @@index([status])
+}
+
+model NfeInvoice {
+  id            String      @id @default(cuid())
+  datasetId     String
+  numero        Int
+  serie         Int         @default(1)
+  emitenteNome  String
+  emitenteUf    String      @db.VarChar(2)
+  categoria     NfeCategory
+  cfop          String
+  dataEmissao   DateTime
+  valorTotal    Decimal     @db.Decimal(14, 2)
+  valorICMS     Decimal     @db.Decimal(14, 2) @default(0)
+  valorPIS      Decimal     @db.Decimal(14, 2) @default(0)
+  valorCOFINS   Decimal     @db.Decimal(14, 2) @default(0)
+  valorIBS      Decimal     @db.Decimal(14, 2) @default(0)
+  valorCBS      Decimal     @db.Decimal(14, 2) @default(0)
+  creditoIbsCbs Decimal     @db.Decimal(14, 2) @default(0)
+
+  dataset Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+
+  @@index([datasetId, dataEmissao])
+  @@index([datasetId, emitenteUf])
+  @@index([datasetId, categoria])
+}
