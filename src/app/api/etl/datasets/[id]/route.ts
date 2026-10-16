@@ -19,6 +19,6 @@ export async function DELETE(_request: Request, { params }: Params) {
   const { id } = await params;
   const dataset = await prisma.dataset.findUnique({ where: { id }, select: { id: true } });
   if (!dataset) return NextResponse.json({ error: "Dataset not found" }, { status: 404 });
-  await prisma.dataset.delete({ where: { id } }); // cascade remove as notas
+  await prisma.dataset.delete({ where: { id } }); // cascade remove os pedidos
   return NextResponse.json({ ok: true });
 }

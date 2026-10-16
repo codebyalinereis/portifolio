@@ -1,17 +1,16 @@
 /**
- * Gera public/sample-nfes.csv — CSV de exemplo no formato brasileiro
+ * Gera public/sample-orders.csv — CSV de exemplo no formato brasileiro
  * (separador ; decimal vírgula, datas dd/mm/aaaa) para o visitante
  * testar o upload no /dashboard. Mesmo gerador do dataset do seed.
  * Rodar com: npm run csv:generate
  */
 import { writeFileSync, mkdirSync } from "node:fs";
-import { generateInvoices } from "../src/lib/fake-dataset";
+import { generateOrders } from "../src/lib/fake-dataset";
 
 const ROWS = 2000;
 const HEADERS = [
-  "numero", "serie", "emitente_nome", "emitente_uf", "categoria", "cfop",
-  "data_emissao", "valor_total", "valor_icms", "valor_pis", "valor_cofins",
-  "valor_ibs", "valor_cbs", "credito_ibs_cbs",
+  "numero", "canal", "cliente_nome", "cliente_uf", "categoria", "pagamento",
+  "data_pedido", "valor_bruto", "valor_desconto", "valor_frete", "valor_total",
 ];
 
 function moneyBR(value: number): string {
@@ -24,30 +23,27 @@ function dateBR(date: Date): string {
   return `${day}/${month}/${date.getUTCFullYear()}`;
 }
 
-const invoices = generateInvoices(ROWS);
+const orders = generateOrders(ROWS);
 
 const lines = [HEADERS.join(";")];
-for (const invoice of invoices) {
+for (const order of orders) {
   lines.push(
     [
-      invoice.numero,
-      invoice.serie,
-      `"${invoice.emitenteNome.replace(/"/g, "'")}"`,
-      invoice.emitenteUf,
-      invoice.categoria,
-      invoice.cfop,
-      dateBR(invoice.dataEmissao),
-      moneyBR(invoice.valorTotal),
-      moneyBR(invoice.valorICMS),
-      moneyBR(invoice.valorPIS),
-      moneyBR(invoice.valorCOFINS),
-      moneyBR(invoice.valorIBS),
-      moneyBR(invoice.valorCBS),
-      moneyBR(invoice.creditoIbsCbs),
+      order.numero,
+      order.canal,
+      `"${order.clienteNome.replace(/"/g, "'")}"`,
+      order.clienteUf,
+      order.categoria,
+      order.pagamento,
+      dateBR(order.dataPedido),
+      moneyBR(order.valorBruto),
+      moneyBR(order.valorDesconto),
+      moneyBR(order.valorFrete),
+      moneyBR(order.valorTotal),
     ].join(";")
   );
 }
 
 mkdirSync("public", { recursive: true });
-writeFileSync("public/sample-nfes.csv", `﻿${lines.join("\r\n")}\r\n`, "utf8");
-console.log(`✓ public/sample-nfes.csv gerado (${ROWS} notas).`);
+writeFileSync("public/sample-orders.csv", `﻿${lines.join("\r\n")}\r\n`, "utf8");
+console.log(`✓ public/sample-orders.csv gerado (${ROWS} pedidos).`);

@@ -64,26 +64,26 @@ export const API_ENDPOINTS: EndpointDoc[] = [
       en: "Available datasets (seed + uploads). Use the id in the other queries.",
     },
     response: `{
-  "data": [{ "id": "cm2f...", "name": "Demo — NF-e 12 meses", "status": "DONE", "rowCount": 12000 }]
+  "data": [{ "id": "cm2f...", "name": "Demo — Pedidos 12 meses", "status": "DONE", "rowCount": 12000 }]
 }`,
   },
   {
     method: "GET",
     path: "/api/analytics/kpis",
     summary: {
-      pt: "KPIs agregados: contagem, somas, ticket médio e comparação de carga (atual × reforma).",
-      en: "Aggregated KPIs: count, sums, average ticket and burden comparison (current × reform).",
+      pt: "KPIs agregados: contagem, receita, ticket médio e comparação de canais (online × loja física).",
+      en: "Aggregated KPIs: count, revenue, average ticket and channel comparison (online × in-store).",
     },
     params: [{ name: "datasetId", example: "cm2f...", note: { pt: "obrigatório", en: "required" } }],
     response: `{
   "data": {
     "count": 12000,
-    "totalValue": 48213794.51,
-    "avgValue": 4017.82,
-    "cargaAtual": 7315420.10,
-    "cargaReforma": 10892833.47,
-    "deltaPct": 48.9,
-    "credits": 8503112.22
+    "totalValue": 9143205.87,
+    "avgValue": 761.93,
+    "receitaOnline": 6472871.02,
+    "receitaLoja": 2670334.85,
+    "deltaPct": 142.4,
+    "descontos": 1028410.36
   }
 }`,
   },
@@ -91,16 +91,16 @@ export const API_ENDPOINTS: EndpointDoc[] = [
     method: "GET",
     path: "/api/analytics/timeseries",
     summary: {
-      pt: "Série mensal (date_trunc) de valor total e das duas cargas tributárias.",
-      en: "Monthly series (date_trunc) of total value and both tax burdens.",
+      pt: "Série mensal (date_trunc) de receita total e por canal (SUM … FILTER).",
+      en: "Monthly series (date_trunc) of total revenue and by channel (SUM … FILTER).",
     },
     params: [
       { name: "datasetId", example: "cm2f...", note: { pt: "obrigatório", en: "required" } },
-      { name: "metric", example: "carga_reforma", note: { pt: "total | carga_atual | carga_reforma", en: "total | carga_atual | carga_reforma" } },
+      { name: "metric", example: "receita_online", note: { pt: "total | receita_online | receita_loja", en: "total | receita_online | receita_loja" } },
     ],
     response: `{
   "data": [
-    { "mes": "2025-11-01", "total": 3920510.22, "carga_atual": 598210.11, "carga_reforma": 887332.05 }
+    { "mes": "2025-11-01", "total": 762044.28, "receita_online": 529018.75, "receita_loja": 233025.53 }
   ]
 }`,
   },
@@ -117,17 +117,17 @@ export const API_ENDPOINTS: EndpointDoc[] = [
     ],
     response: `{
   "data": [
-    { "key": "SP", "count": 3011, "total": 12203944.10, "reforma": 2750110.44, "share": 0.253 }
+    { "key": "SP", "count": 3011, "total": 2312844.10, "online": 1625010.44, "share": 0.253 }
   ]
 }`,
   },
   {
     method: "GET",
     path: "/api/analytics/sample",
-    summary: { pt: "Amostra das 50 notas mais recentes do dataset.", en: "Sample of the 50 most recent invoices in the dataset." },
+    summary: { pt: "Amostra dos 50 pedidos mais recentes do dataset.", en: "Sample of the 50 most recent orders in the dataset." },
     params: [{ name: "datasetId", example: "cm2f...", note: { pt: "obrigatório", en: "required" } }],
     response: `{
-  "data": [{ "numero": 8231, "emitenteUf": "MG", "categoria": "ALIMENTOS", "valorTotal": 4520.90 }]
+  "data": [{ "numero": 8231, "canal": "ONLINE", "clienteUf": "MG", "categoria": "ELETRONICOS", "pagamento": "PIX", "valorTotal": 4520.90 }]
 }`,
   },
   {
@@ -138,7 +138,7 @@ export const API_ENDPOINTS: EndpointDoc[] = [
       en: "Uploads a CSV (multipart/form-data, file field, ≤ 5 MB) and triggers the ETL in the background. Responds 202 with the datasetId.",
     },
     params: [
-      { name: "file", example: "notas.csv", note: { pt: ".csv; separador ; ou , e valores 1.234,56", en: ".csv; ; or , separator and 1,234.56-style values" } },
+      { name: "file", example: "pedidos.csv", note: { pt: ".csv; separador ; ou , e valores 1.234,56", en: ".csv; ; or , separator and 1,234.56-style values" } },
     ],
     response: `{ "datasetId": "cm2f...", "status": "PROCESSING" }`,
   },

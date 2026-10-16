@@ -11,7 +11,7 @@ export const datasetIdSchema = z.object({
 });
 
 export const timeseriesSchema = datasetIdSchema.extend({
-  metric: z.enum(["total", "carga_atual", "carga_reforma"]).default("total"),
+  metric: z.enum(["total", "receita_online", "receita_loja"]).default("total"),
 });
 
 export const breakdownSchema = datasetIdSchema.extend({

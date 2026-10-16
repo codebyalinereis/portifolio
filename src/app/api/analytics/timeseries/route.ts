@@ -9,7 +9,7 @@ export async function GET(request: Request) {
     metric: searchParams.get("metric") ?? "total",
   });
   if (!parsed.success) {
-    return NextResponse.json({ error: "datasetId is required; metric must be total|carga_atual|carga_reforma" }, { status: 400 });
+    return NextResponse.json({ error: "datasetId is required; metric must be total|receita_online|receita_loja" }, { status: 400 });
   }
 
   const points = await getTimeseries(parsed.data.datasetId);

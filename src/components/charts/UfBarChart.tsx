@@ -12,9 +12,11 @@ function compactBRL(value: number): string {
 function BarTooltip({
   active,
   payload,
+  unitLabel,
 }: {
   active?: boolean;
   payload?: Array<{ payload?: BreakdownRow }>;
+  unitLabel: string;
 }) {
   if (!active || !payload?.[0]?.payload) return null;
   const row = payload[0].payload;
@@ -22,7 +24,7 @@ function BarTooltip({
     <div className="rounded-md border border-border bg-surface px-3 py-2 text-xs shadow-sm">
       <p className="font-semibold">{row.key}</p>
       <p className="tabular-nums text-muted">
-        {formatBRL(row.total)} · {row.count.toLocaleString("pt-BR")} notas
+        {formatBRL(row.total)} · {row.count.toLocaleString("pt-BR")} {unitLabel}
       </p>
     </div>
   );
@@ -32,7 +34,7 @@ function BarTooltip({
  * Ranking por UF — barras horizontais com UMA cor sequencial (magnitude),
  * nunca arco-íris. Cor interpolada em OKLab entre os extremos validados.
  */
-export function UfBarChart({ rows }: { rows: BreakdownRow[] }) {
+export function UfBarChart({ rows, unitLabel }: { rows: BreakdownRow[]; unitLabel: string }) {
   const palette = useChartPalette();
   const maxValue = Math.max(...rows.map((row) => row.total), 1);
 
@@ -55,7 +57,7 @@ export function UfBarChart({ rows }: { rows: BreakdownRow[] }) {
           tickLine={false}
           width={32}
         />
-        <Tooltip content={<BarTooltip />} cursor={{ fill: palette.grid, opacity: 0.35 }} />
+        <Tooltip content={<BarTooltip unitLabel={unitLabel} />} cursor={{ fill: palette.grid, opacity: 0.35 }} />
         <Bar dataKey="total" barSize={14} radius={[0, 4, 4, 0]}>
           {rows.map((row) => (
             <Cell key={row.key} fill={palette.seq(row.total / maxValue)} />

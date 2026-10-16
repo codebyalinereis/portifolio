@@ -1,13 +1,13 @@
 /**
- * Seed do portfólio — conteúdo real do perfil + dataset demo de NF-e.
+ * Seed do portfólio — conteúdo real do perfil + dataset demo de pedidos.
  * Idempotente: limpa e recria tudo. Rodar com: npm run db:seed
  */
 import { PrismaClient } from "@prisma/client";
-import { generateInvoices } from "../src/lib/fake-dataset";
+import { generateOrders } from "../src/lib/fake-dataset";
 
 const prisma = new PrismaClient();
 
-const INVOICE_COUNT = 12000;
+const ORDER_COUNT = 12000;
 const CHUNK_SIZE = 1000;
 
 async function seedContent() {
@@ -254,28 +254,28 @@ async function seedDataset() {
   const startedAt = Date.now();
   const dataset = await prisma.dataset.create({
     data: {
-      name: "Demo — NF-e 12 meses",
+      name: "Demo — Pedidos 12 meses",
       source: "seed",
       status: "PROCESSING",
     },
   });
 
-  const invoices = generateInvoices(INVOICE_COUNT);
-  for (let index = 0; index < invoices.length; index += CHUNK_SIZE) {
-    const chunk = invoices.slice(index, index + CHUNK_SIZE).map((invoice) => ({ ...invoice, datasetId: dataset.id }));
-    await prisma.nfeInvoice.createMany({ data: chunk });
+  const orders = generateOrders(ORDER_COUNT);
+  for (let index = 0; index < orders.length; index += CHUNK_SIZE) {
+    const chunk = orders.slice(index, index + CHUNK_SIZE).map((order) => ({ ...order, datasetId: dataset.id }));
+    await prisma.salesOrder.createMany({ data: chunk });
   }
 
   await prisma.dataset.update({
     where: { id: dataset.id },
     data: {
       status: "DONE",
-      rowCount: invoices.length,
+      rowCount: orders.length,
       durationMs: Date.now() - startedAt,
       completedAt: new Date(),
     },
   });
-  console.log(`   ${invoices.length} notas inseridas.`);
+  console.log(`   ${orders.length} pedidos inseridos.`);
 }
 
 async function main() {

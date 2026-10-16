@@ -51,7 +51,7 @@ export function TrendLineChart({ points }: { points: TimeseriesPoint[] }) {
   const c = d.dashboard.charts.trend;
 
   const monthFormat = new Intl.DateTimeFormat(locale === "en" ? "en-US" : "pt-BR", { month: "short", year: "2-digit" });
-  // dataKey fixo (carga_atual/carga_reforma) + name localizado: legend/tooltip
+  // dataKey fixo (receita_online/receita_loja) + name localizado: legend/tooltip
   // traduzem sem chaves dinâmicas no tipo.
   const data = points.map((point) => ({
     ...point,
@@ -67,11 +67,11 @@ export function TrendLineChart({ points }: { points: TimeseriesPoint[] }) {
       <div className="mb-2 flex items-center gap-4 text-xs text-muted">
         <span className="inline-flex items-center gap-1.5">
           <span aria-hidden="true" className="inline-block h-0.5 w-4 rounded" style={{ background: palette.series1 }} />
-          {c.legendAtual}
+          {c.legendOnline}
         </span>
         <span className="inline-flex items-center gap-1.5">
           <span aria-hidden="true" className="inline-block h-0.5 w-4 rounded" style={{ background: palette.series2 }} />
-          {c.legendReforma}
+          {c.legendLoja}
         </span>
       </div>
       <ResponsiveContainer width="100%" height={260}>
@@ -94,16 +94,16 @@ export function TrendLineChart({ points }: { points: TimeseriesPoint[] }) {
           />
           <Tooltip content={<ChartTooltip />} cursor={{ stroke: palette.grid, strokeWidth: 1 }} />
           <Line
-            name={c.legendAtual}
-            dataKey="carga_atual"
+            name={c.legendOnline}
+            dataKey="receita_online"
             stroke={palette.series1}
             strokeWidth={2}
             dot={false}
             activeDot={{ r: 4, strokeWidth: 0 }}
           />
           <Line
-            name={c.legendReforma}
-            dataKey="carga_reforma"
+            name={c.legendLoja}
+            dataKey="receita_loja"
             stroke={palette.series2}
             strokeWidth={2}
             dot={false}
@@ -114,22 +114,22 @@ export function TrendLineChart({ points }: { points: TimeseriesPoint[] }) {
             <>
               <ReferenceDot
                 x={lastX}
-                y={last.carga_atual}
+                y={last.receita_online}
                 fill={palette.series1}
                 stroke={palette.surface}
                 strokeWidth={2}
                 r={4}
-                label={{ value: compactBRL(last.carga_atual), position: "right", fill: palette.text, fontSize: 11, dx: 6 }}
+                label={{ value: compactBRL(last.receita_online), position: "right", fill: palette.text, fontSize: 11, dx: 6 }}
                 ifOverflow="extendDomain"
               />
               <ReferenceDot
                 x={lastX}
-                y={last.carga_reforma}
+                y={last.receita_loja}
                 fill={palette.series2}
                 stroke={palette.surface}
                 strokeWidth={2}
                 r={4}
-                label={{ value: compactBRL(last.carga_reforma), position: "right", fill: palette.text, fontSize: 11, dx: 6 }}
+                label={{ value: compactBRL(last.receita_loja), position: "right", fill: palette.text, fontSize: 11, dx: 6 }}
                 ifOverflow="extendDomain"
               />
             </>

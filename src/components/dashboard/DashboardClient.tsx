@@ -92,12 +92,12 @@ export function DashboardClient() {
     };
   }, [datasetId]);
 
-  const ufs = useMemo(() => Array.from(new Set(sample.map((row) => row.emitenteUf))).sort(), [sample]);
+  const ufs = useMemo(() => Array.from(new Set(sample.map((row) => row.clienteUf))).sort(), [sample]);
   const categorias = useMemo(() => Array.from(new Set(sample.map((row) => row.categoria))).sort(), [sample]);
   const filteredSample = useMemo(
     () =>
       sample.filter(
-        (row) => (!filterUf || row.emitenteUf === filterUf) && (!filterCategoria || row.categoria === filterCategoria)
+        (row) => (!filterUf || row.clienteUf === filterUf) && (!filterCategoria || row.categoria === filterCategoria)
       ),
     [sample, filterUf, filterCategoria]
   );
@@ -190,14 +190,14 @@ export function DashboardClient() {
               <ChartFigure
                 title={t.charts.trend.title}
                 subtitle={t.charts.trend.subtitle}
-                ariaLabel={`${t.charts.trend.title}: ${t.charts.trend.legendAtual} × ${t.charts.trend.legendReforma}, R$`}
+                ariaLabel={`${t.charts.trend.title}: ${t.charts.trend.legendOnline} × ${t.charts.trend.legendLoja}, R$`}
                 detailsLabel={t.charts.detailsLabel}
                 table={{
-                  headings: [t.table.data, t.charts.trend.legendAtual, t.charts.trend.legendReforma],
+                  headings: [t.table.data, t.charts.trend.legendOnline, t.charts.trend.legendLoja],
                   rows: timeseries.map((point) => [
                     monthLabel(point.mes),
-                    compactBRL(point.carga_atual),
-                    compactBRL(point.carga_reforma),
+                    compactBRL(point.receita_online),
+                    compactBRL(point.receita_loja),
                   ]),
                 }}
               >
@@ -219,7 +219,7 @@ export function DashboardClient() {
                     ]),
                   }}
                 >
-                  <UfBarChart rows={ufRows} />
+                  <UfBarChart rows={ufRows} unitLabel={t.kpis.orders.toLowerCase()} />
                 </ChartFigure>
 
                 <ChartFigure
@@ -288,24 +288,24 @@ export function DashboardClient() {
                 <tr>
                   <th scope="col" className="px-3 py-2 font-medium">{t.table.numero}</th>
                   <th scope="col" className="px-3 py-2 font-medium">{t.table.data}</th>
-                  <th scope="col" className="px-3 py-2 font-medium">{t.table.emitente}</th>
+                  <th scope="col" className="px-3 py-2 font-medium">{t.table.cliente}</th>
                   <th scope="col" className="px-3 py-2 font-medium">{t.table.uf}</th>
                   <th scope="col" className="px-3 py-2 font-medium">{t.table.categoria}</th>
-                  <th scope="col" className="px-3 py-2 font-medium">{t.table.cfop}</th>
+                  <th scope="col" className="px-3 py-2 font-medium">{t.table.pagamento}</th>
                   <th scope="col" className="px-3 py-2 text-right font-medium">{t.table.valor}</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredSample.map((row) => (
-                  <tr key={`${row.numero}-${row.cfop}`} className="border-t border-border">
+                  <tr key={`${row.numero}-${row.canal}`} className="border-t border-border">
                     <td className="px-3 py-1.5 tabular-nums text-muted">{row.numero}</td>
                     <td className="px-3 py-1.5 text-muted">
-                      {new Date(row.dataEmissao).toLocaleDateString(locale === "en" ? "en-US" : "pt-BR")}
+                      {new Date(row.dataPedido).toLocaleDateString(locale === "en" ? "en-US" : "pt-BR")}
                     </td>
-                    <td className="max-w-48 truncate px-3 py-1.5 text-muted">{row.emitenteNome}</td>
-                    <td className="px-3 py-1.5 text-muted">{row.emitenteUf}</td>
+                    <td className="max-w-48 truncate px-3 py-1.5 text-muted">{row.clienteNome}</td>
+                    <td className="px-3 py-1.5 text-muted">{row.clienteUf}</td>
                     <td className="px-3 py-1.5 text-muted">{categoryLabel(row.categoria)}</td>
-                    <td className="px-3 py-1.5 tabular-nums text-muted">{row.cfop}</td>
+                    <td className="px-3 py-1.5 text-muted">{row.pagamento}</td>
                     <td className="px-3 py-1.5 text-right tabular-nums">{formatBRL(row.valorTotal)}</td>
                   </tr>
                 ))}

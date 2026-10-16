@@ -1,6 +1,6 @@
 import { z } from "zod";
-import type { NfeCategory } from "@prisma/client";
-import { CATEGORY_CONFIG, PIS_COFINS_RATE } from "@/lib/nfe-config";
+import type { PaymentMethod, ProductCategory, SalesChannel } from "@prisma/client";
+import { CATEGORY_CONFIG } from "@/lib/sales-config";
 import { UF_LIST } from "@/lib/validation";
 
 /**
@@ -8,62 +8,84 @@ import { UF_LIST } from "@/lib/validation";
  * valida cada linha com Zod e deriva campos ausentes.
  */
 
-const CATEGORY_MAP: Record<string, NfeCategory> = {
-  alimentos: "ALIMENTOS",
-  combustiveis: "COMBUSTIVEIS",
-  combustivel: "COMBUSTIVEIS",
+const CATEGORY_MAP: Record<string, ProductCategory> = {
   eletronicos: "ELETRONICOS",
   eletronico: "ELETRONICOS",
-  farmaceutico: "FARMACEUTICO",
-  metalurgico: "METALURGICO",
-  servicos: "SERVICOS",
-  servico: "SERVICOS",
-  vestuario: "VESTUARIO",
+  moda: "MODA",
+  vestuario: "MODA",
+  casa_decor: "CASA_DECOR",
+  casa: "CASA_DECOR",
+  livros_midia: "LIVROS_MIDIA",
+  livros: "LIVROS_MIDIA",
+  beleza_saude: "BELEZA_SAUDE",
+  beleza: "BELEZA_SAUDE",
+  alimentos_bebidas: "ALIMENTOS_BEBIDAS",
+  alimentos: "ALIMENTOS_BEBIDAS",
+  esportes_lazer: "ESPORTES_LAZER",
+  esportes: "ESPORTES_LAZER",
   outros: "OUTROS",
+};
+
+const CANAL_MAP: Record<string, SalesChannel> = {
+  online: "ONLINE",
+  loja_online: "ONLINE",
+  e_commerce: "ONLINE",
+  ecommerce: "ONLINE",
+  loja_fisica: "LOJA_FISICA",
+  fisica: "LOJA_FISICA",
+  loja: "LOJA_FISICA",
+};
+
+const PAGAMENTO_MAP: Record<string, PaymentMethod> = {
+  pix: "PIX",
+  cartao_de_credito: "CARTAO_CREDITO",
+  cartao_credito: "CARTAO_CREDITO",
+  credito: "CARTAO_CREDITO",
+  cartao_de_debito: "CARTAO_DEBITO",
+  cartao_debito: "CARTAO_DEBITO",
+  debito: "CARTAO_DEBITO",
+  boleto: "BOLETO",
+  dinheiro: "DINHEIRO",
 };
 
 /** Alias aceitos → chave canônica. */
 const HEADER_ALIASES: Record<string, string> = {
   numero: "numero",
-  nfe: "numero",
-  "numero nfe": "numero",
-  serie: "serie",
-  emitente: "emitenteNome",
-  emitente_nome: "emitenteNome",
-  emitentenome: "emitenteNome",
-  nome_emitente: "emitenteNome",
-  razao_social: "emitenteNome",
-  uf: "emitenteUf",
-  emitente_uf: "emitenteUf",
-  emitenteuf: "emitenteUf",
-  estado: "emitenteUf",
+  pedido: "numero",
+  numero_pedido: "numero",
+  numeropedido: "numero",
+  order: "numero",
+  canal: "canal",
+  channel: "canal",
+  cliente: "clienteNome",
+  cliente_nome: "clienteNome",
+  clientenome: "clienteNome",
+  nome_cliente: "clienteNome",
+  consumidor: "clienteNome",
+  uf: "clienteUf",
+  cliente_uf: "clienteUf",
+  clienteuf: "clienteUf",
+  estado: "clienteUf",
   categoria: "categoria",
-  cfop: "cfop",
-  data: "dataEmissao",
-  data_emissao: "dataEmissao",
-  dataemissao: "dataEmissao",
-  emissao: "dataEmissao",
+  pagamento: "pagamento",
+  metodo_pagamento: "pagamento",
+  payment: "pagamento",
+  data: "dataPedido",
+  data_pedido: "dataPedido",
+  datapedido: "dataPedido",
+  valor_bruto: "valorBruto",
+  valorbruto: "valorBruto",
+  bruto: "valorBruto",
+  valor_desconto: "valorDesconto",
+  valordesconto: "valorDesconto",
+  desconto: "valorDesconto",
+  valor_frete: "valorFrete",
+  valorfrete: "valorFrete",
+  frete: "valorFrete",
   valor_total: "valorTotal",
   valortotal: "valorTotal",
   valor: "valorTotal",
-  valor_icms: "valorICMS",
-  valoricms: "valorICMS",
-  icms: "valorICMS",
-  valor_pis: "valorPIS",
-  valorpis: "valorPIS",
-  pis: "valorPIS",
-  valor_cofins: "valorCOFINS",
-  valorcofins: "valorCOFINS",
-  cofins: "valorCOFINS",
-  valor_ibs: "valorIBS",
-  valoribs: "valorIBS",
-  ibs: "valorIBS",
-  valor_cbs: "valorCBS",
-  valorcbs: "valorCBS",
-  cbs: "valorCBS",
-  credito_ibs_cbs: "creditoIbsCbs",
-  creditoibscbs: "creditoIbsCbs",
-  credito: "creditoIbsCbs",
+  total: "valorTotal",
 };
 
 function normalizeHeader(header: string): string {
@@ -109,30 +131,51 @@ export function parseDateBR(raw: string | undefined): Date | undefined {
   return Number.isNaN(iso.getTime()) ? undefined : iso;
 }
 
-const invoiceRowSchema = z.object({
+function slugify(raw: string | undefined): string {
+  return (
+    raw
+      ?.normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .trim()
+      .toLowerCase()
+      .replace(/[\s-]+/g, "_") ?? ""
+  );
+}
+
+const orderRowSchema = z.object({
   numero: z.coerce.number().int().min(1),
-  serie: z.coerce.number().int().min(1).default(1),
-  emitenteNome: z.string().min(2).max(160),
-  emitenteUf: z.string().refine((uf) => (UF_LIST as readonly string[]).includes(uf), "UF inválida"),
+  canal: z.enum(["ONLINE", "LOJA_FISICA"]),
+  clienteNome: z.string().min(2).max(160),
+  clienteUf: z.string().refine((uf) => (UF_LIST as readonly string[]).includes(uf), "UF inválida"),
   categoria: z.enum([
-    "ALIMENTOS", "COMBUSTIVEIS", "ELETRONICOS", "FARMACEUTICO",
-    "METALURGICO", "SERVICOS", "VESTUARIO", "OUTROS",
+    "ELETRONICOS", "MODA", "CASA_DECOR", "LIVROS_MIDIA",
+    "BELEZA_SAUDE", "ALIMENTOS_BEBIDAS", "ESPORTES_LAZER", "OUTROS",
   ]),
-  cfop: z.string().regex(/^\d{4}$/, "CFOP deve ter 4 dígitos"),
-  dataEmissao: z.coerce.date(),
-  valorTotal: z.number().positive().max(1e12),
-  valorICMS: z.number().min(0).max(1e12).default(0),
-  valorPIS: z.number().min(0).max(1e12).default(0),
-  valorCOFINS: z.number().min(0).max(1e12).default(0),
-  valorIBS: z.number().min(0).max(1e12).default(0),
-  valorCBS: z.number().min(0).max(1e12).default(0),
-  creditoIbsCbs: z.number().min(0).max(1e12).default(0),
+  pagamento: z.enum(["PIX", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "DINHEIRO"]),
+  dataPedido: z.coerce.date(),
+  valorBruto: z.number().positive().max(1e12),
+  // Opcionais: ausentes no CSV → derivados abaixo (parâmetros por categoria).
+  valorDesconto: z.number().min(0).max(1e12).optional(),
+  valorFrete: z.number().min(0).max(1e12).optional(),
+  valorTotal: z.number().min(0).max(1e12).optional(),
 });
 
-export type InvoiceRow = z.infer<typeof invoiceRowSchema>;
+export type OrderRow = {
+  numero: number;
+  canal: SalesChannel;
+  clienteNome: string;
+  clienteUf: string;
+  categoria: ProductCategory;
+  pagamento: PaymentMethod;
+  dataPedido: Date;
+  valorBruto: number;
+  valorDesconto: number;
+  valorFrete: number;
+  valorTotal: number;
+};
 
 export type TransformResult =
-  | { ok: true; row: InvoiceRow }
+  | { ok: true; row: OrderRow }
   | { ok: false; line: number; error: string };
 
 /** Normaliza e valida uma linha crua do CSV. */
@@ -142,24 +185,24 @@ export function transformRow(rawRow: Record<string, string>, line: number): Tran
     row[normalizeHeader(header)] = value;
   }
 
-  const categoriaRaw = row.categoria?.normalize("NFD").replace(/\p{Diacritic}/gu, "").trim().toLowerCase().replace(/[\s-]+/g, "_");
-  const categoria = CATEGORY_MAP[categoriaRaw ?? ""] ?? "OUTROS";
+  // Defaults explícitos: coluna ausente ou valor não mapeado não derruba a linha.
+  const categoria = CATEGORY_MAP[slugify(row.categoria)] ?? "OUTROS";
+  const canal = CANAL_MAP[slugify(row.canal)] ?? "ONLINE";
+  const pagamento = PAGAMENTO_MAP[slugify(row.pagamento)] ?? "PIX";
 
-  const parsed = invoiceRowSchema.safeParse({
+  const parsed = orderRowSchema.safeParse({
     numero: row.numero,
-    serie: row.serie ?? "1",
-    emitenteNome: row.emitenteNome,
-    emitenteUf: row.emitenteUf?.toUpperCase(),
+    canal,
+    clienteNome: row.clienteNome,
+    clienteUf: row.clienteUf?.toUpperCase(),
     categoria,
-    cfop: row.cfop,
-    dataEmissao: parseDateBR(row.dataEmissao),
+    pagamento,
+    dataPedido: parseDateBR(row.dataPedido),
+    // CSV mínimo sem coluna de bruto: aproxima pelo total.
+    valorBruto: parseMoneyBR(row.valorBruto) ?? parseMoneyBR(row.valorTotal),
+    valorDesconto: parseMoneyBR(row.valorDesconto),
+    valorFrete: parseMoneyBR(row.valorFrete),
     valorTotal: parseMoneyBR(row.valorTotal),
-    valorICMS: parseMoneyBR(row.valorICMS) ?? 0,
-    valorPIS: parseMoneyBR(row.valorPIS) ?? 0,
-    valorCOFINS: parseMoneyBR(row.valorCOFINS) ?? 0,
-    valorIBS: parseMoneyBR(row.valorIBS) ?? 0,
-    valorCBS: parseMoneyBR(row.valorCBS) ?? 0,
-    creditoIbsCbs: parseMoneyBR(row.creditoIbsCbs) ?? 0,
   });
 
   if (!parsed.success) {
@@ -168,35 +211,24 @@ export function transformRow(rawRow: Record<string, string>, line: number): Tran
     return { ok: false, line, error: `${field}: ${issue.message}` };
   }
 
-  let invoice = parsed.data;
+  const base = parsed.data;
 
-  // Derivações quando o CSV não traz a carga da reforma nem créditos:
-  // alíquotas médias por categoria (mesma lógica do gerador do dataset demo).
-  const reformaMissing = invoice.valorIBS === 0 && invoice.valorCBS === 0;
-  if (reformaMissing) {
-    const [min, max] = CATEGORY_CONFIG[invoice.categoria].reformaRate;
-    const rate = (min + max) / 2;
-    invoice = {
-      ...invoice,
-      valorIBS: Math.round(invoice.valorTotal * rate * 0.7 * 100) / 100,
-      valorCBS: Math.round(invoice.valorTotal * rate * 0.3 * 100) / 100,
-    };
-  }
-  if (invoice.creditoIbsCbs === 0 && reformaMissing) {
-    const [min, max] = CATEGORY_CONFIG[invoice.categoria].creditShare;
-    const share = (min + max) / 2;
-    invoice = {
-      ...invoice,
-      creditoIbsCbs: Math.round((invoice.valorIBS + invoice.valorCBS) * share * 100) / 100,
-    };
-  }
-  // PIS/COFINS ausentes → aplica 9,25% (regime cumulativo)
-  if (invoice.valorPIS === 0 && invoice.valorCOFINS === 0 && invoice.valorICMS > 0) {
-    const total = invoice.valorTotal * PIS_COFINS_RATE;
-    invoice = { ...invoice, valorPIS: Math.round(total * 0.27 * 100) / 100, valorCOFINS: Math.round(total * 0.73 * 100) / 100 };
-  }
+  // Derivações quando o CSV não traz desconto/frete/total:
+  // parâmetros médios por categoria (mesma lógica do gerador do dataset demo).
+  const [descontoMin, descontoMax] = CATEGORY_CONFIG[base.categoria].discountShare;
+  const valorDesconto = base.valorDesconto ?? round2(base.valorBruto * ((descontoMin + descontoMax) / 2));
 
-  return { ok: true, row: invoice };
+  const [freteMin, freteMax] = CATEGORY_CONFIG[base.categoria].freightShare;
+  const valorFrete =
+    base.valorFrete ?? (base.canal === "ONLINE" ? round2(base.valorBruto * ((freteMin + freteMax) / 2)) : 0);
+
+  const valorTotal = base.valorTotal ?? round2(base.valorBruto - valorDesconto + valorFrete);
+
+  return { ok: true, row: { ...base, valorDesconto, valorFrete, valorTotal } };
+}
+
+function round2(value: number): number {
+  return Math.round(value * 100) / 100;
 }
 
 export { normalizeHeader };

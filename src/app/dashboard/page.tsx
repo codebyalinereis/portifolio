@@ -3,7 +3,7 @@ import { DashboardClient } from "@/components/dashboard/DashboardClient";
 
 export const metadata: Metadata = {
   title: "Dashboard — ETL & Analytics | Aline Reis",
-  description: "Demo de ETL e analytics: upload de CSV de notas fiscais, transformação, PostgreSQL e SQL analítico.",
+  description: "Demo de ETL e analytics: upload de CSV de pedidos de e-commerce, transformação, PostgreSQL e SQL analítico.",
 };
 
 export default function DashboardPage() {

@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { parseCsvBuffer } from "./parse";
 import { transformRow } from "./transform";
-import type { InvoiceRow } from "./transform";
+import type { OrderRow } from "./transform";
 
 const CHUNK_SIZE = 1000;
 export const MAX_ERROR_LINES = 100;
@@ -10,10 +10,10 @@ export const MAX_ERROR_LINES = 100;
  * Pipeline completo de load: createMany em chunks dentro do Dataset.
  * Retorna contadores. Erros são acumulados (linha + motivo).
  */
-async function loadRows(datasetId: string, rows: InvoiceRow[]): Promise<void> {
+async function loadRows(datasetId: string, rows: OrderRow[]): Promise<void> {
   for (let index = 0; index < rows.length; index += CHUNK_SIZE) {
     const chunk = rows.slice(index, index + CHUNK_SIZE).map((row) => ({ ...row, datasetId }));
-    await prisma.nfeInvoice.createMany({ data: chunk });
+    await prisma.salesOrder.createMany({ data: chunk });
   }
 }
 
@@ -28,7 +28,7 @@ export async function runEtl(datasetId: string, buffer: Buffer): Promise<void> {
     const rawRows = await parseCsvBuffer(buffer);
 
     // 2. Transform (valida linha a linha; acumula erros)
-    const valid: InvoiceRow[] = [];
+    const valid: OrderRow[] = [];
     const errors: string[] = [];
     for (let index = 0; index < rawRows.length; index++) {
       const result = transformRow(rawRows[index], index + 2); // +2: header + 1-indexed

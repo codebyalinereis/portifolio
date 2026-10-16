@@ -1,11 +1,11 @@
 # Portfólio — Aline Reis · Data Developer & Full Stack
 
-Portfólio pessoal full stack com um **demo de dados de verdade**: ETL de CSV → PostgreSQL → API analytics → dashboard com gráficos, tudo dentro do próprio app. O dataset fictício compara a carga tributária de notas fiscais no **regime atual (ICMS + PIS/COFINS) × Reforma Tributária (IBS + CBS)** — o domínio em que trabalho.
+Portfólio pessoal full stack com um **demo de dados de verdade**: ETL de CSV → PostgreSQL → API analytics → dashboard com gráficos, tudo dentro do próprio app. O dataset fictício compara a receita de pedidos de e-commerce no **canal online × loja física**.
 
 ## Stack
 
 - **Next.js 16** (App Router, `src/`, Turbopack, cacheComponents) · React 19 · TypeScript
-- **Prisma 6** + **PostgreSQL** (migrations + seed determinístico com ~12.000 notas)
+- **Prisma 6** + **PostgreSQL** (migrations + seed determinístico com ~12.000 pedidos)
 - **Tailwind CSS v4** (tokens de cor no CSS, dark mode via `next-themes`)
 - **Recharts 3** (paleta própria validada p/ daltonismo, light/dark)
 - **iron-session** (cookie selado httpOnly) + **bcryptjs** + rate-limit in-memory
@@ -26,7 +26,7 @@ createdb -U postgres portfolio
 
 # 3. Configurar o .env (copie o .env.example e ajuste)
 
-# 4. Migrations + seed (conteúdo real do perfil + dataset demo de 12k notas)
+# 4. Migrations + seed (conteúdo real do perfil + dataset demo de 12k pedidos)
 npm run db:migrate
 npm run db:seed
 
@@ -70,9 +70,9 @@ A senha do admin é **a que você definir** no `ADMIN_PASSWORD_HASH_B64` (comand
 ### Demo de dados (o coração data developer)
 
 1. **Upload** (`POST /api/etl/upload`): CSV `;` ou `,` até 5 MB → responde `202` e processa em background.
-2. **ETL**: parse streaming → normalização de cabeçalhos (aliases) → valores pt-BR (`1.234,56`, `dd/mm/aaaa`) → validação Zod por linha → derivações (PIS/COFINS, créditos por categoria) → `createMany` em chunks de 1.000.
-3. **Analytics** (`/api/analytics/*`): agregações no Postgres (`aggregate`, `groupBy`, `date_trunc` via SQL puro) + derivadas no servidor.
-4. Baixe o [CSV de exemplo](public/sample-nfes.csv) (2.000 notas) e suba no dashboard.
+2. **ETL**: parse streaming → normalização de cabeçalhos (aliases) → valores pt-BR (`1.234,56`, `dd/mm/aaaa`) → validação Zod por linha → derivações (desconto e frete por categoria/canal, total) → `createMany` em chunks de 1.000.
+3. **Analytics** (`/api/analytics/*`): agregações no Postgres (`aggregate` do Prisma + SQL puro com `date_trunc` e `SUM … FILTER`) e derivadas no servidor.
+4. Baixe o [CSV de exemplo](public/sample-orders.csv) (2.000 pedidos) e suba no dashboard.
 
 ### API pública (resumo)
 
@@ -92,7 +92,7 @@ npm run build && npm start
 npm run db:migrate     # prisma migrate dev
 npm run db:seed        # seed (perfil + dataset demo determinístico)
 npm run db:studio      # Prisma Studio
-npm run csv:generate   # regenera public/sample-nfes.csv (2.000 notas)
+npm run csv:generate   # regenera public/sample-orders.csv (2.000 pedidos)
 npm run lint
 ```
 
@@ -115,6 +115,6 @@ src/
   app/             páginas · api/ (routes) · admin/
   components/      ui · layout · sections · charts · dashboard · admin
   lib/             prisma · auth · analytics · csv/{parse,transform,load} ·
-                   i18n/ · validation · serializers · api-docs · nfe-config
+                   i18n/ · validation · serializers · api-docs · sales-config
   contexts/        LocaleProvider · ThemeProvider
 ```

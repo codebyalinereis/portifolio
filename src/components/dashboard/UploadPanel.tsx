@@ -131,7 +131,7 @@ export function UploadPanel({ onDatasetCreated }: { onDatasetCreated: () => void
       />
 
       <a
-        href="/sample-nfes.csv"
+        href="/sample-orders.csv"
         download
         className="mt-3 inline-flex items-center gap-1.5 text-xs text-accent hover:underline"
       >

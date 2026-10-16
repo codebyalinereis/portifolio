@@ -1,5 +1,6 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import type { NfeCategory } from "@prisma/client";
+import type { ProductCategory } from "@prisma/client";
 
 /**
  * Queries analíticas do demo — agregações no PostgreSQL e derivadas no servidor.
@@ -12,61 +13,60 @@ export type Kpis = {
   count: number;
   totalValue: number;
   avgValue: number;
-  cargaAtual: number;
-  cargaReforma: number;
+  receitaOnline: number;
+  receitaLoja: number;
   deltaPct: number;
-  credits: number;
+  descontos: number;
 };
 
 export async function getKpis(datasetId: string): Promise<Kpis> {
-  const aggregate = await prisma.nfeInvoice.aggregate({
+  const aggregate = await prisma.salesOrder.aggregate({
     where: { datasetId },
     _count: { _all: true },
     _sum: {
       valorTotal: true,
-      valorICMS: true,
-      valorPIS: true,
-      valorCOFINS: true,
-      valorIBS: true,
-      valorCBS: true,
-      creditoIbsCbs: true,
+      valorDesconto: true,
     },
     _avg: { valorTotal: true },
   });
 
-  const totalValue = toNumber(aggregate._sum.valorTotal);
-  const cargaAtual =
-    toNumber(aggregate._sum.valorICMS) + toNumber(aggregate._sum.valorPIS) + toNumber(aggregate._sum.valorCOFINS);
-  const cargaReforma = toNumber(aggregate._sum.valorIBS) + toNumber(aggregate._sum.valorCBS);
+  // Receita por canal: agregações filtradas em paralelo.
+  const [online, loja] = await Promise.all([
+    prisma.salesOrder.aggregate({ where: { datasetId, canal: "ONLINE" }, _sum: { valorTotal: true } }),
+    prisma.salesOrder.aggregate({ where: { datasetId, canal: "LOJA_FISICA" }, _sum: { valorTotal: true } }),
+  ]);
+
+  const receitaOnline = toNumber(online._sum.valorTotal);
+  const receitaLoja = toNumber(loja._sum.valorTotal);
 
   return {
     count: aggregate._count._all,
-    totalValue,
+    totalValue: toNumber(aggregate._sum.valorTotal),
     avgValue: toNumber(aggregate._avg.valorTotal),
-    cargaAtual,
-    cargaReforma,
-    deltaPct: cargaAtual > 0 ? (cargaReforma / cargaAtual - 1) * 100 : 0,
-    credits: toNumber(aggregate._sum.creditoIbsCbs),
+    receitaOnline,
+    receitaLoja,
+    deltaPct: receitaLoja > 0 ? (receitaOnline / receitaLoja - 1) * 100 : 0,
+    descontos: toNumber(aggregate._sum.valorDesconto),
   };
 }
 
 export type TimeseriesPoint = {
   mes: string; // ISO yyyy-mm-dd (primeiro dia do mês)
   total: number;
-  carga_atual: number;
-  carga_reforma: number;
+  receita_online: number;
+  receita_loja: number;
 };
 
 export async function getTimeseries(datasetId: string): Promise<TimeseriesPoint[]> {
-  // date_trunc não existe no groupBy do Prisma — SQL puro.
+  // date_trunc/FILTER não existem no groupBy do Prisma — SQL puro.
   const rows = await prisma.$queryRaw<
-    { mes: Date; total: unknown; carga_atual: unknown; carga_reforma: unknown }[]
+    { mes: Date; total: unknown; receita_online: unknown; receita_loja: unknown }[]
   >`
-    SELECT date_trunc('month', "dataEmissao")::date AS mes,
-           SUM("valorTotal")                       AS total,
-           SUM("valorICMS" + "valorPIS" + "valorCOFINS") AS carga_atual,
-           SUM("valorIBS" + "valorCBS")            AS carga_reforma
-    FROM "NfeInvoice"
+    SELECT date_trunc('month', "dataPedido")::date        AS mes,
+           SUM("valorTotal")                               AS total,
+           SUM("valorTotal") FILTER (WHERE "canal" = 'ONLINE')      AS receita_online,
+           SUM("valorTotal") FILTER (WHERE "canal" = 'LOJA_FISICA') AS receita_loja
+    FROM "SalesOrder"
     WHERE "datasetId" = ${datasetId}
     GROUP BY 1
     ORDER BY 1`;
@@ -74,8 +74,8 @@ export async function getTimeseries(datasetId: string): Promise<TimeseriesPoint[
   return rows.map((row) => ({
     mes: new Date(row.mes).toISOString().slice(0, 10),
     total: toNumber(row.total),
-    carga_atual: toNumber(row.carga_atual),
-    carga_reforma: toNumber(row.carga_reforma),
+    receita_online: toNumber(row.receita_online),
+    receita_loja: toNumber(row.receita_loja),
   }));
 }
 
@@ -83,48 +83,56 @@ export type BreakdownRow = {
   key: string;
   count: number;
   total: number;
-  reforma: number;
+  online: number;
   share: number; // participação no valor total (0–1)
 };
 
 export async function getBreakdown(datasetId: string, dimension: "uf" | "categoria"): Promise<BreakdownRow[]> {
-  const groups = await prisma.nfeInvoice.groupBy({
-    by: [dimension === "uf" ? "emitenteUf" : "categoria"],
-    where: { datasetId },
-    _sum: { valorTotal: true, valorIBS: true, valorCBS: true },
-    _count: true,
-    orderBy: { _sum: { valorTotal: "desc" } },
-    take: 12,
-  });
+  // groupBy em 2 níveis (dimensão × canal) quebraria o take: 12 — limitaria
+  // pares, não grupos. SQL puro com FILTER mantém o top 12 da dimensão.
+  // Coluna via whitelist: dimension vem de enum Zod na rota.
+  const dimensionColumn = Prisma.raw(dimension === "uf" ? '"clienteUf"' : '"categoria"');
+  const rows = await prisma.$queryRaw<
+    { key: string | ProductCategory; count: bigint; total: unknown; online: unknown }[]
+  >`
+    SELECT ${dimensionColumn}                          AS key,
+           COUNT(*)                                     AS count,
+           SUM("valorTotal")                            AS total,
+           SUM("valorTotal") FILTER (WHERE "canal" = 'ONLINE') AS online
+    FROM "SalesOrder"
+    WHERE "datasetId" = ${datasetId}
+    GROUP BY 1
+    ORDER BY total DESC
+    LIMIT 12`;
 
-  const totalAll = groups.reduce((sum, group) => sum + toNumber(group._sum.valorTotal), 0);
+  const totalAll = rows.reduce((sum, row) => sum + toNumber(row.total), 0);
 
-  return groups.map((group) => {
-    const key = dimension === "uf" ? group.emitenteUf : (group.categoria as NfeCategory);
-    const total = toNumber(group._sum.valorTotal);
+  return rows.map((row) => {
+    const total = toNumber(row.total);
     return {
-      key,
-      count: group._count,
+      key: String(row.key),
+      count: toNumber(row.count),
       total,
-      reforma: toNumber(group._sum.valorIBS) + toNumber(group._sum.valorCBS),
+      online: toNumber(row.online),
       share: totalAll > 0 ? total / totalAll : 0,
     };
   });
 }
 
-export async function getInvoiceSample(datasetId: string, take = 50) {
-  return prisma.nfeInvoice.findMany({
+export async function getOrderSample(datasetId: string, take = 50) {
+  return prisma.salesOrder.findMany({
     where: { datasetId },
-    orderBy: { dataEmissao: "desc" },
+    orderBy: { dataPedido: "desc" },
     take,
     select: {
       numero: true,
-      dataEmissao: true,
-      emitenteNome: true,
-      emitenteUf: true,
+      dataPedido: true,
+      clienteNome: true,
+      clienteUf: true,
       categoria: true,
+      pagamento: true,
+      canal: true,
       valorTotal: true,
-      cfop: true,
     },
   });
 }

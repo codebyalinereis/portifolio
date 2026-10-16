@@ -1,5 +1,5 @@
 // Portfólio Full Stack + Data Developer — Aline Reis
-// Conteúdo do portfólio (gerido em /admin) + demo de dados (ETL NF-e)
+// Conteúdo do portfólio (gerido em /admin) + demo de dados (ETL de pedidos)
 
 generator client {
   provider = "prisma-client-js"
@@ -93,7 +93,7 @@ model ContactMessage {
   @@index([read, createdAt])
 }
 
-// ── Demo de dados: ETL de notas fiscais (regime atual × IBS/CBS) ─────────
+// ── Demo de dados: ETL de pedidos de e-commerce (online × loja física) ────
 
 enum DatasetStatus {
   PROCESSING
@@ -101,15 +101,28 @@ enum DatasetStatus {
   FAILED
 }
 
-enum NfeCategory {
-  ALIMENTOS
-  COMBUSTIVEIS
+enum ProductCategory {
   ELETRONICOS
-  FARMACEUTICO
-  METALURGICO
-  SERVICOS
-  VESTUARIO
+  MODA
+  CASA_DECOR
+  LIVROS_MIDIA
+  BELEZA_SAUDE
+  ALIMENTOS_BEBIDAS
+  ESPORTES_LAZER
   OUTROS
+}
+
+enum SalesChannel {
+  ONLINE
+  LOJA_FISICA
+}
+
+enum PaymentMethod {
+  PIX
+  CARTAO_CREDITO
+  CARTAO_DEBITO
+  BOLETO
+  DINHEIRO
 }
 
 model Dataset {
@@ -125,32 +138,30 @@ model Dataset {
   createdAt        DateTime      @default(now())
   completedAt      DateTime?
 
-  invoices NfeInvoice[]
+  orders SalesOrder[]
 
   @@index([status])
 }
 
-model NfeInvoice {
-  id            String      @id @default(cuid())
+model SalesOrder {
+  id            String         @id @default(cuid())
   datasetId     String
   numero        Int
-  serie         Int         @default(1)
-  emitenteNome  String
-  emitenteUf    String      @db.VarChar(2)
-  categoria     NfeCategory
-  cfop          String
-  dataEmissao   DateTime
-  valorTotal    Decimal     @db.Decimal(14, 2)
-  valorICMS     Decimal     @db.Decimal(14, 2) @default(0)
-  valorPIS      Decimal     @db.Decimal(14, 2) @default(0)
-  valorCOFINS   Decimal     @db.Decimal(14, 2) @default(0)
-  valorIBS      Decimal     @db.Decimal(14, 2) @default(0)
-  valorCBS      Decimal     @db.Decimal(14, 2) @default(0)
-  creditoIbsCbs Decimal     @db.Decimal(14, 2) @default(0)
+  canal         SalesChannel
+  clienteNome   String
+  clienteUf     String         @db.VarChar(2)
+  categoria     ProductCategory
+  pagamento     PaymentMethod
+  dataPedido    DateTime
+  valorBruto    Decimal        @db.Decimal(14, 2)
+  valorDesconto Decimal        @db.Decimal(14, 2) @default(0)
+  valorFrete    Decimal        @db.Decimal(14, 2) @default(0)
+  valorTotal    Decimal        @db.Decimal(14, 2)
 
   dataset Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
 
-  @@index([datasetId, dataEmissao])
-  @@index([datasetId, emitenteUf])
+  @@index([datasetId, dataPedido])
+  @@index([datasetId, clienteUf])
   @@index([datasetId, categoria])
+  @@index([datasetId, canal])
 }

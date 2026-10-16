@@ -53,20 +53,20 @@ export function KpiRow({ kpis }: { kpis: Kpis }) {
 
   return (
     <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-      <Tile label={k.invoices} value={formatNumber(kpis.count)} />
+      <Tile label={k.orders} value={formatNumber(kpis.count)} />
       <Tile label={k.totalValue} value={compactBRL(kpis.totalValue)} fullValue={formatBRL(kpis.totalValue)} />
       <Tile label={k.avgValue} value={compactBRL(kpis.avgValue)} fullValue={formatBRL(kpis.avgValue)} />
-      <Tile label={k.cargaAtual} value={compactBRL(kpis.cargaAtual)} fullValue={formatBRL(kpis.cargaAtual)} />
+      <Tile label={k.receitaLoja} value={compactBRL(kpis.receitaLoja)} fullValue={formatBRL(kpis.receitaLoja)} />
       <Tile
-        label={k.cargaReforma}
-        value={compactBRL(kpis.cargaReforma)}
-        fullValue={formatBRL(kpis.cargaReforma)}
+        label={k.receitaOnline}
+        value={compactBRL(kpis.receitaOnline)}
+        fullValue={formatBRL(kpis.receitaOnline)}
         delta={kpis.deltaPct}
         deltaLabel={k.deltaLabel}
         // Cor é apoio — o ícone + o sinal + o texto carregam o significado
-        deltaColor={kpis.deltaPct >= 0 ? palette.series2 : palette.series1}
+        deltaColor={kpis.deltaPct >= 0 ? palette.series1 : palette.series2}
       />
-      <Tile label={k.credits} value={compactBRL(kpis.credits)} fullValue={formatBRL(kpis.credits)} />
+      <Tile label={k.descontos} value={compactBRL(kpis.descontos)} fullValue={formatBRL(kpis.descontos)} />
     </div>
   );
 }

@@ -19,10 +19,11 @@ export type DatasetFull = DatasetSummary & {
 
 export type SampleRow = {
   numero: number;
-  dataEmissao: string;
-  emitenteNome: string;
-  emitenteUf: string;
+  canal: string;
+  clienteNome: string;
+  clienteUf: string;
   categoria: string;
+  pagamento: string;
+  dataPedido: string;
   valorTotal: number;
-  cfop: string;
 };
