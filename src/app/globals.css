@@ -4,8 +4,6 @@
 
 /*
  * Tokens de cor — roxo/lilás, light e dark com passos próprios.
- * Paleta de charts validada com o script de dataviz (lightness band, chroma,
- * CVD ΔE, contraste vs superfície): série 1 roxo, série 2 âmbar, rampa lilás.
  */
 :root {
   --background: #faf9fc;
@@ -17,12 +15,22 @@
   --accent: #7c3aed;
   --accent-ink: #ffffff;
   --accent-soft: #f0e9fd;
-  --series-1: #6d28d9;
-  --series-2: #d97706;
-  --seq-min: #a78bfa;
-  --seq-max: #4c1d95;
   --ring: #7c3aed;
   --glow: rgba(124, 58, 237, 0.35);
+  /*
+   * Paleta categórica da corrida de dados — instância de referência validada
+   * com o script do skill dataviz (6/6 checks no modo light, superfície #fdfcff).
+   * Slot segue a ENTIDADE (linguagem), nunca o rank. WARN de contraste nos slots
+   * 3/4/5 é aliviado com rótulos diretos (nome + valor) em toda linha + legenda.
+   */
+  --race-1: #2a78d6;
+  --race-2: #eb6834;
+  --race-3: #1baf7a;
+  --race-4: #eda100;
+  --race-5: #e87ba4;
+  --race-6: #008300;
+  --race-7: #6250d6;
+  --race-8: #e34948;
 }
 
 .dark {
@@ -35,12 +43,18 @@
   --accent: #a78bfa;
   --accent-ink: #171226;
   --accent-soft: #2a2342;
-  --series-1: #8b5cf6;
-  --series-2: #d97706;
-  --seq-min: #6d28d9;
-  --seq-max: #c4b5fd;
   --ring: #a78bfa;
   --glow: rgba(167, 139, 250, 0.35);
+  /* Corrida de dados — mesmos 8 tons, passos escolhidos p/ superfície escura
+     #1b1726 (validado: 6/6 checks, contraste >= 3:1 em todos). */
+  --race-1: #3987e5;
+  --race-2: #d95926;
+  --race-3: #199e70;
+  --race-4: #c98500;
+  --race-5: #d55181;
+  --race-6: #008300;
+  --race-7: #9085e9;
+  --race-8: #e66767;
 }
 
 @theme inline {
@@ -53,10 +67,6 @@
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
   --color-accent-soft: var(--accent-soft);
-  --color-series-1: var(--series-1);
-  --color-series-2: var(--series-2);
-  --color-seq-min: var(--seq-min);
-  --color-seq-max: var(--seq-max);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -81,15 +91,6 @@ body {
 :focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
-}
-
-/* Grades e eixos dos gráficos usam os mesmos tokens */
-.chart-grid line {
-  stroke: var(--border);
-}
-.chart-text {
-  fill: var(--muted);
-  font-size: 12px;
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -304,6 +305,150 @@ body {
   border-radius: 2px;
 }
 
+/* 8. Barra de progresso de leitura (ScrollWalker escreve o scaleX) */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 60;
+  background: linear-gradient(90deg, var(--accent), #e879f9, var(--accent));
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  pointer-events: none;
+}
+
+/* 9. Marquee do stack — faixa deslizante que pausa no hover */
+.marquee {
+  overflow: hidden;
+  padding: 0.9rem 0;
+  background: var(--surface);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 2.5rem;
+  animation: marquee-slide 28s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+@keyframes marquee-slide {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* 10. Caret da máquina de escrever (Typewriter) */
+.typewriter-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 3px;
+  vertical-align: -0.15em;
+  background: var(--accent);
+  animation: caret-blink 1.05s step-end infinite;
+}
+@keyframes caret-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* 11. Jogo da memória — flip 3D com CSS puro */
+.memory-card {
+  perspective: 600px;
+}
+.memory-inner {
+  position: relative;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.memory-flipped {
+  transform: rotateY(180deg);
+}
+.memory-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.65rem;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border: 1px solid var(--border);
+}
+.memory-front {
+  background:
+    radial-gradient(120px circle at 30% 20%, color-mix(in srgb, var(--accent) 16%, transparent), transparent),
+    var(--surface);
+  color: var(--accent);
+  font-size: 1.15rem;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.memory-card:hover .memory-front {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  transform: translateY(-2px);
+}
+.memory-back {
+  background: var(--background);
+  transform: rotateY(180deg);
+}
+.memory-matched .memory-back {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  box-shadow: 0 0 18px -6px var(--glow);
+}
+
+/* 12. Pop de vitória do jogo */
+.win-pop {
+  animation: win-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes win-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 13. Corrida de barras — troca de rank suave via transform; barra fina com
+   ponta arredondada no lado do dado e quadrada na baseline (spec de marcas). */
+.race-row {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: default;
+}
+.race-row:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+  border-radius: 6px;
+}
+.race-bar {
+  border-radius: 0 4px 4px 0;
+  transition: width 0.45s linear;
+}
+.race-row:hover .race-bar,
+.race-row:focus-visible .race-bar {
+  filter: brightness(1.12);
+}
+
 /* Acessibilidade: sem movimento quando o usuário pede */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -317,11 +462,21 @@ body {
   .text-gradient,
   .aurora::before,
   .aurora::after,
-  .pulse-ring::before {
+  .pulse-ring::before,
+  .marquee-track,
+  .typewriter-caret,
+  .win-pop {
     animation: none;
   }
   .tilt-body {
     transform: none;
+    transition: none;
+  }
+  .memory-inner {
+    transition: none;
+  }
+  .race-row,
+  .race-bar {
     transition: none;
   }
 }

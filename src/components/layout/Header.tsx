@@ -2,17 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTheme } from "next-themes";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import { useI18n } from "@/contexts/LocaleProvider";
+import { useMounted } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const { d } = useI18n();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   const isDark = resolvedTheme === "dark";
   return (
@@ -66,8 +66,7 @@ export function Header() {
   const links = [
     { href: "/", label: d.nav.home },
     { href: "/projects", label: d.nav.projects },
-    { href: "/dashboard", label: d.nav.dashboard },
-    { href: "/docs", label: d.nav.docs },
+    { href: "/lab", label: d.nav.lab },
   ];
 
   return (

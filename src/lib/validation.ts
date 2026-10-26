@@ -1,23 +1,5 @@
 import { z } from "zod";
 
-export const UF_LIST = [
-  "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT",
-  "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO",
-] as const;
-
-export const datasetIdSchema = z.object({
-  // IDs são cuids gerados pelo Prisma (ex.: "cmv9lwea2...").
-  datasetId: z.string().regex(/^c[0-9a-z]{20,}$/, "datasetId inválido"),
-});
-
-export const timeseriesSchema = datasetIdSchema.extend({
-  metric: z.enum(["total", "carga_atual", "carga_reforma"]).default("total"),
-});
-
-export const breakdownSchema = datasetIdSchema.extend({
-  dimension: z.enum(["uf", "categoria"]).default("uf"),
-});
-
 export const contactSchema = z.object({
   name: z.string().min(2).max(120),
   email: z.string().email().max(160),

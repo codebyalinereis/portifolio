@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
-import { Button, buttonClass } from "@/components/ui/primitives";
+import { Button } from "@/components/ui/primitives";
 import { useI18n } from "@/contexts/LocaleProvider";
 
 /** Fetch helper autenticado para o CRUD admin. */
@@ -37,6 +37,9 @@ export function useAdminList<T>(url: string) {
   }, [url]);
 
   useEffect(() => {
+    // Fetch na montagem: o setState acontece após await, dentro de reload() —
+    // a regra não enxerga isso e aponta falsa chamada síncrona.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void reload();
   }, [reload]);
 

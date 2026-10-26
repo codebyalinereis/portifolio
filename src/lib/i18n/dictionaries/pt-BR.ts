@@ -3,9 +3,9 @@
 export const ptBR = {
   locale: "pt-BR",
   metadata: {
-    title: "Aline Reis — Data Developer & Full Stack",
+    title: "Aline Reis — Desenvolvedora Full Stack & Dados",
     description:
-      "Data Developer back-end e full stack: pipelines ETL, integrações, APIs REST, PostgreSQL, automação e dados fiscais. Portfólio com demo de ETL e analytics.",
+      "Portfólio de Aline Reis: aplicações web completas, APIs, automações e pipelines de dados — mais um lab de experimentos interativos em canvas. Next.js, React, Node.js, Python e PostgreSQL.",
   },
 
   nav: {
@@ -16,8 +16,7 @@ export const ptBR = {
     experience: "Experiência",
     education: "Formação",
     contact: "Contato",
-    dashboard: "Dashboard",
-    docs: "API Docs",
+    lab: "Lab",
     admin: "Admin",
   },
 
@@ -52,28 +51,28 @@ export const ptBR = {
 
   hero: {
     name: "Aline Reis",
-    role: "Data Developer · Back-end & Full Stack",
+    roles: ["Desenvolvedora Full Stack", "Data Developer", "Back-end & APIs", "Automação & Integrações"],
     location: "Uberlândia — MG",
     summary:
-      "Construo pipelines ETL, integrações e back-ends que rodam em produção — do levantamento do requisito à validação da entrega. Rotina de Python, Node.js, SQL e PostgreSQL, com foco em qualidade de dados, automação e processos fiscais.",
+      "Construo aplicações web completas — do banco de dados ao último pixel: APIs, integrações, automações e interfaces que gostam de ser tocadas. Rotina de TypeScript, React, Node.js, Python e SQL, com carinho por performance e detalhe.",
     ctaProjects: "Ver projetos",
-    ctaDashboard: "Ver demo de dados",
+    ctaLab: "Explorar o Lab",
     ctaContact: "Entrar em contato",
-    badges: ["Python", "Node.js", "SQL", "PostgreSQL", "ETL", "RabbitMQ · Kafka", "Docker", "React · Next.js"],
+    badges: ["React", "Next.js", "TypeScript", "Node.js", "Python", "PostgreSQL", "Docker", "n8n"],
   },
 
   about: {
     title: "Sobre mim",
     paragraphs: [
-      "Sou desenvolvedora com foco em dados: engenharia e integração, automação de processos, pipelines ETL e back-end em ambientes produtivos. Trabalho com Python, SQL, Pentaho Data Integration, Node.js e APIs REST, além de bancos relacionais e NoSQL, mensageria com RabbitMQ e Kafka e orquestração com n8n.",
-      "Validei qualidade e integridade de dados, publiquei jobs e dei suporte a sistemas críticos — troubleshooting faz parte do dia a dia. Também atuo no lado full stack, conectando necessidades de negócio, serviços back-end, integrações e aplicações front-end.",
-      "Meu diferencial é o domínio fiscal e tributário: já automatizei a geração de guias de Substituição Tributária para todos os estados brasileiros (redução de ~90% no tempo operacional) e desenvolvo soluções para apuração na Reforma Tributária (IBS/CBS).",
+      "Sou desenvolvedora full stack com forte bagagem em dados: modelagem SQL, pipelines ETL e integração entre sistemas. No front, TypeScript, React e Next.js; no back, Node.js, Java e Python; e PostgreSQL como casa dos dados — com RabbitMQ, Kafka e Docker no dia a dia de infra.",
+      "Gosto de pegar processo manual e devolver automação confiável: já reduzi em ~90% o tempo de operações inteiras com RPA e orquestração. Validação de dados, observabilidade e troubleshooting em produção fazem parte do ofício.",
+      "Fora do código, estudo ciência de dados e IA na graduação — e transformo ideias em experimentos interativos, como os do Lab desta página.",
     ],
     highlightTitle: "Em números",
     highlights: [
-      { value: "4+", label: "anos com dados e automação" },
-      { value: "~90%", label: "de redução de tempo operacional em automação fiscal" },
-      { value: "27", label: "estados com guias de ST automatizadas" },
+      { value: "4+", label: "anos construindo software" },
+      { value: "~90%", label: "de redução de tempo operacional com automação" },
+      { value: "5+", label: "projetos entregues em produção" },
     ],
   },
 
@@ -85,14 +84,14 @@ export const ptBR = {
       BACKEND: "Back-end & APIs",
       DATA: "Dados & ETL",
       DEVOPS: "Infra, Automação & Mensageria",
-      DOMAIN: "Domínio Fiscal & Tributário",
+      DOMAIN: "Extras & Estudos",
     },
     levelLabel: "nível",
   },
 
   projects: {
     title: "Projetos",
-    subtitle: "Soluções em produção e estudos de caso — do pipeline de dados à aplicação.",
+    subtitle: "Soluções em produção e estudos de caso — do back-end à interface.",
     featuredLabel: "Destaque",
     tech: "Tecnologias",
     repo: "Repositório",
@@ -106,7 +105,7 @@ export const ptBR = {
       BACKEND: "Back-end",
       DATA: "Dados",
       DEVOPS: "Infra",
-      DOMAIN: "Fiscal",
+      DOMAIN: "Extras",
     },
   },
 
@@ -149,8 +148,7 @@ export const ptBR = {
 
   footer: {
     rights: "Todos os direitos reservados.",
-    builtWith: "Feito com Next.js, Prisma, PostgreSQL e Recharts.",
-    dataNote: "Os dados do dashboard são fictícios, gerados para demonstração.",
+    builtWith: "Feito com Next.js, Prisma, PostgreSQL e Tailwind — sem templates.",
   },
 
   notFound: {
@@ -158,120 +156,44 @@ export const ptBR = {
     subtitle: "O endereço acessado não existe (ou mudou de lugar).",
   },
 
-  dashboard: {
-    title: "Dashboard — ETL & Analytics",
-    subtitle: "Pipeline de verdade: CSV de notas fiscais → transformação → PostgreSQL → SQL analítico → gráficos.",
-    introTitle: "Como funciona esta demo",
-    intro: [
-      "O dataset compara a carga tributária do regime atual (ICMS + PIS + COFINS) com a da Reforma Tributária (IBS + CBS), nota a nota.",
-      "Faça o upload de um CSV (há um arquivo de exemplo para baixar). O servidor faz o parse, valida cada linha com Zod, transforma os valores no formato brasileiro e carrega no PostgreSQL em lotes.",
-      "Depois, os endpoints de analytics agregam tudo com SQL (agregações, séries temporais e quebras por UF e categoria) — os mesmos endpoints documentados na página de API Docs.",
-    ],
-    upload: {
-      title: "1. Upload do CSV",
-      hint: "Arquivo .csv de até 5 MB, separador ; e valores no formato brasileiro (1.234,56).",
-      choose: "Escolher arquivo",
-      uploading: "Enviando...",
-      processing: "Processando...",
-      dragHint: "Clique ou arraste o arquivo aqui",
-      steps: ["Recebido", "Parseando", "Transformando", "Carregando", "Concluído"],
-      done: "concluído",
-      failed: "falhou",
-      rows: "linhas",
-      errors: "linhas com erro",
-      duration: "tempo",
-      sampleCta: "Baixar CSV de exemplo",
-      sampleHint: "gerado pelo mesmo gerador do dataset demo",
-      invalidType: "Envie um arquivo .csv.",
-      tooLarge: "Limite de 5 MB excedido.",
-      pipelineTitle: "Pipeline",
-    },
-    dataset: {
-      label: "2. Dataset",
-      empty: "Nenhum dataset disponível. Faça upload ou rode o seed.",
-      rowCount: "linhas",
-      created: "criado em",
-      status: { PROCESSING: "Processando", DONE: "Pronto", FAILED: "Falhou" },
-    },
-    kpis: {
-      title: "3. Indicadores",
-      invoices: "Notas fiscais",
-      totalValue: "Valor total",
-      avgValue: "Ticket médio",
-      cargaAtual: "Carga atual (ICMS+PIS+COFINS)",
-      cargaReforma: "Carga IBS+CBS",
-      deltaLabel: "vs regime atual",
-      credits: "Créditos IBS/CBS aproveitados",
-    },
-    charts: {
-      trend: {
-        title: "Carga tributária mensal",
-        subtitle: "Regime atual × IBS+CBS, em R$ por mês",
-        legendAtual: "Regime atual",
-        legendReforma: "IBS+CBS",
+  lab: {
+    title: "Lab",
+    subtitle: "Experimentos interativos feitos à mão com canvas e React — mexa, clique, brinque.",
+    flow: {
+      title: "Campo de fluxo",
+      subtitle: "Partículas navegando um campo de ruído procedural. O cursor atrai; o clique explode.",
+      density: "Densidade",
+      scheme: "Paleta",
+      schemes: {
+        violet: "Violeta",
+        aurora: "Aurora",
+        ocean: "Oceano",
+        sunset: "Pôr do sol",
       },
-      uf: {
-        title: "Valor por UF",
-        subtitle: "Top 12 estados por valor total de notas",
-      },
-      category: {
-        title: "Participação por categoria",
-        subtitle: "Valor total por categoria de produto/serviço",
-        share: "participação",
-      },
-      detailsLabel: "Ver tabela de dados",
-      empty: "Sem dados para exibir.",
+      pause: "Pausar",
+      play: "Retomar",
+      hint: "Dica: passe o mouse e clique no canvas",
     },
-    table: {
-      title: "Amostra das notas",
-      numero: "Número",
-      data: "Data",
-      emitente: "Emitente",
-      uf: "UF",
-      categoria: "Categoria",
-      valor: "Valor total",
-      cfop: "CFOP",
+    game: {
+      title: "Jogo da memória",
+      subtitle: "Encontre os 8 pares da stack. Menos movimentos, melhor.",
+      moves: "Movimentos",
+      time: "Tempo",
+      best: "Recorde",
+      reset: "Recomeçar",
+      win: "Você encontrou todos os pares!",
+      newRecord: "Novo recorde!",
+      seconds: "s",
     },
-    filters: {
-      allUfs: "Todas as UFs",
-      allCategories: "Todas as categorias",
-      label: "Filtros",
+    race: {
+      title: "Corrida de dados",
+      subtitle: "Popularidade das linguagens ao longo do tempo — ranking ao vivo, animação e scrubber de anos.",
+      play: "Reproduzir",
+      pause: "Pausar",
+      year: "Ano",
+      valueLabel: "de índice",
+      note: "Dados ilustrativos, gerados no navegador apenas para demonstração — a diversão é real.",
     },
-    categories: {
-      ALIMENTOS: "Alimentos",
-      COMBUSTIVEIS: "Combustíveis",
-      ELETRONICOS: "Eletrônicos",
-      FARMACEUTICO: "Farmacêutico",
-      METALURGICO: "Metalúrgico",
-      SERVICOS: "Serviços",
-      VESTUARIO: "Vestuário",
-      OUTROS: "Outros",
-    },
-  },
-
-  docs: {
-    title: "API Docs",
-    subtitle: "Endpoints públicos deste projeto — a mesma API que abastece o dashboard.",
-    intro: "Todas as respostas são JSON. Endpoints de analytics exigem datasetId (veja GET /api/analytics/datasets). Valores monetários são serializados como Number.",
-    endpointsTitle: "Endpoints",
-    description: "Descrição",
-    parameters: "Parâmetros",
-    response: "Resposta (exemplo resumido)",
-    notesTitle: "Decisões técnicas",
-    notes: [
-      {
-        title: "ETL assíncrono (fire-and-forget)",
-        body: "O processamento do CSV roda em background no processo Node, sem fila externa. Adequado para demo/local; em produção, o próximo passo seria BullMQ + Redis.",
-      },
-      {
-        title: "Decimal → Number",
-        body: "O PostgreSQL guarda Decimal(14,2), mas o JSON responde Number — perda insignificante na casa de 14 dígitos e cliente mais simples.",
-      },
-      {
-        title: "Validação em camadas",
-        body: "Zod valida query params e payload; cada linha do CSV é validada individualmente no transform, com erros acumulados (aborta após 100).",
-      },
-    ],
   },
 
   admin: {
@@ -290,7 +212,6 @@ export const ptBR = {
       technologies: "Tecnologias",
       experiences: "Experiências",
       messages: "Mensagens",
-      datasets: "Datasets",
       logout: "Sair",
       viewSite: "Ver site",
     },
@@ -352,16 +273,6 @@ export const ptBR = {
       markRead: "Marcar como lida",
       markUnread: "Marcar como não lida",
       empty: "Nenhuma mensagem.",
-    },
-    datasets: {
-      title: "Datasets do demo",
-      name: "Nome",
-      source: "Origem",
-      status: "Status",
-      rows: "Linhas",
-      errors: "Erros",
-      created: "Criado em",
-      empty: "Nenhum dataset.",
     },
   },
 };

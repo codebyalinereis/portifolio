@@ -18,7 +18,6 @@ export function Footer() {
         <div>
           <p className="font-semibold">Aline Reis</p>
           <p className="text-sm text-muted">{d.footer.builtWith}</p>
-          <p className="mt-1 text-xs text-muted">{d.footer.dataNote}</p>
         </div>
         <div className="flex items-center gap-4 text-muted">
           <a href={`mailto:${CONTACT.email}`} aria-label="E-mail" className="hover:text-foreground">

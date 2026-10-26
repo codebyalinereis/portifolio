@@ -9,6 +9,7 @@ import { ProjectsShowcase } from "@/components/sections/ProjectsShowcase";
 import { ExperienceTimeline } from "@/components/sections/ExperienceTimeline";
 import { EducationSection } from "@/components/sections/EducationSection";
 import { ContactSection } from "@/components/sections/ContactForm";
+import { TechMarquee } from "@/components/sections/TechMarquee";
 
 export default async function HomePage() {
   const cookieStore = await cookies();
@@ -34,6 +35,7 @@ export default async function HomePage() {
   return (
     <>
       <Hero d={d} />
+      <TechMarquee items={d.hero.badges} />
       <About d={d} />
       <SkillsGrid d={d} technologies={technologies} />
       <ProjectsShowcase d={d} locale={locale} projects={featuredProjects} />

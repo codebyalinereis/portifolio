@@ -1,16 +1,16 @@
-# Portfólio — Aline Reis · Data Developer & Full Stack
+# Portfólio — Aline Reis · Full Stack & Dados
 
-Portfólio pessoal full stack com um **demo de dados de verdade**: ETL de CSV → PostgreSQL → API analytics → dashboard com gráficos, tudo dentro do próprio app. O dataset fictício compara a carga tributária de notas fiscais no **regime atual (ICMS + PIS/COFINS) × Reforma Tributária (IBS + CBS)** — o domínio em que trabalho.
+Portfólio pessoal full stack com **Lab interativo**: experimentos de canvas generativo e um jogo da memória da stack, feitos à mão com React — sem bibliotecas de efeito. O conteúdo do site (projetos, skills, experiências, mensagens) vive no PostgreSQL e é gerido por um painel admin próprio.
 
 ## Stack
 
 - **Next.js 16** (App Router, `src/`, Turbopack, cacheComponents) · React 19 · TypeScript
-- **Prisma 6** + **PostgreSQL** (migrations + seed determinístico com ~12.000 notas)
+- **Prisma 6** + **PostgreSQL** (migrations + seed do conteúdo do perfil)
 - **Tailwind CSS v4** (tokens de cor no CSS, dark mode via `next-themes`)
-- **Recharts 3** (paleta própria validada p/ daltonismo, light/dark)
 - **iron-session** (cookie selado httpOnly) + **bcryptjs** + rate-limit in-memory
-- **csv-parse** (ETL streaming com validação por linha via **Zod**)
 - i18n pt-BR/EN por dicionários TS + cookie (sem rotas por locale)
+- Efeitos próprios em CSS/canvas 2D: aurora, constelação interativa, spotlight+tilt,
+  scroll reveal, barra de progresso, marquee, typewriter, campo de fluxo, flip 3D
 
 ## Rodando localmente (Windows)
 
@@ -26,7 +26,7 @@ createdb -U postgres portfolio
 
 # 3. Configurar o .env (copie o .env.example e ajuste)
 
-# 4. Migrations + seed (conteúdo real do perfil + dataset demo de 12k notas)
+# 4. Migrations + seed (conteúdo do perfil)
 npm run db:migrate
 npm run db:seed
 
@@ -61,28 +61,24 @@ A senha do admin é **a que você definir** no `ADMIN_PASSWORD_HASH_B64` (comand
 
 | Rota | Descrição |
 |---|---|
-| `/` | One-page: hero, sobre, skills com níveis, projetos, experiência, contato |
+| `/` | One-page: hero com typewriter, marquee do stack, sobre, skills com níveis, projetos, experiência, contato |
 | `/projects` | Projetos completos com filtro por stack |
-| `/dashboard` | **Demo ETL + analytics**: upload de CSV com stepper, KPIs, tendência mensal, breakdown por UF/categoria |
-| `/docs` | Documentação da API REST analytics/conteúdo |
-| `/admin` | Painel CRUD (projetos, skills, experiências, mensagens, datasets) — login em `/admin/login` |
+| `/lab` | **Lab interativo**: campo de fluxo generativo em canvas (cursor atrai, clique explode, densidade e paleta ajustáveis) + jogo da memória da stack com recorde |
+| `/admin` | Painel CRUD (projetos, skills, experiências, mensagens) — login em `/admin/login` |
 
-### Demo de dados (o coração data developer)
+### Interações (o coração do front)
 
-1. **Upload** (`POST /api/etl/upload`): CSV `;` ou `,` até 5 MB → responde `202` e processa em background.
-2. **ETL**: parse streaming → normalização de cabeçalhos (aliases) → valores pt-BR (`1.234,56`, `dd/mm/aaaa`) → validação Zod por linha → derivações (PIS/COFINS, créditos por categoria) → `createMany` em chunks de 1.000.
-3. **Analytics** (`/api/analytics/*`): agregações no Postgres (`aggregate`, `groupBy`, `date_trunc` via SQL puro) + derivadas no servidor.
-4. Baixe o [CSV de exemplo](public/sample-nfes.csv) (2.000 notas) e suba no dashboard.
+- **Campo de fluxo** (`/lab`): partículas seguem um campo de ângulos procedural (senoides compostas), rastro em cometa, atração pelo cursor e explosão no clique — canvas 2D puro, dpr-aware.
+- **Jogo da memória** (`/lab`): 8 pares da stack, flip 3D em CSS puro, cronômetro e recorde no `localStorage`.
+- **Hero**: constelação que "sente" o cursor, aurora em gradiente, papéis em máquina de escrever.
+- **Global**: scroll reveal, barra de progresso de leitura, spotlight+tilt nos cards, tudo com `prefers-reduced-motion` respeitado.
 
 ### API pública (resumo)
 
 - `GET /api/projects` · `GET /api/skills` · `GET /api/experiences` — conteúdo do portfólio
-- `GET /api/analytics/datasets | kpis | timeseries | breakdown | sample?datasetId=` — analytics (400 se `datasetId` inválido)
 - `POST /api/contact` — formulário com honeypot
 - `POST /api/auth/login | logout` — sessão admin (rate-limit 5 tentativas/15 min)
 - `PATCH/POST/DELETE /api/admin/*` — CRUD autenticado
-
-Documentação completa com exemplos de request/response: **`/docs`** no app.
 
 ## Scripts
 
@@ -90,31 +86,27 @@ Documentação completa com exemplos de request/response: **`/docs`** no app.
 npm run dev            # desenvolvimento
 npm run build && npm start
 npm run db:migrate     # prisma migrate dev
-npm run db:seed        # seed (perfil + dataset demo determinístico)
+npm run db:seed        # seed do conteúdo do perfil
 npm run db:studio      # Prisma Studio
-npm run csv:generate   # regenera public/sample-nfes.csv (2.000 notas)
 npm run lint
 ```
 
 ## Decisões técnicas (conscientes)
 
-- **ETL fire-and-forget** sem fila: o job roda no processo Node e o cliente faz polling de 1 s. Em produção real: BullMQ + Redis. Documentado em `/docs`.
 - **App 100% dinâmico** (`instant = false` no root layout): locale vem de cookie e o conteúdo de banco precisa refletir o CRUD na hora — shell estático do cacheComponents não vale a pena aqui.
 - **Serializador central** Decimal→Number: nunca deixa `Prisma.Decimal` vazar no JSON.
 - **Rate-limit in-memory**: suficiente para demo single-instance.
 - **i18n sem rotas por locale**: SEO bilíngue limitado (aceito para portfólio pessoal).
 - **bcryptjs** (puro JS): evita build nativo no Windows.
-- **Seed determinístico** (`faker.seed` fixa): demos reproduzíveis.
+- **Zero dependências de efeito/animação**: canvas e CSS escritos à mão — menos bundle, mais controle.
 
 ## Estrutura
 
 ```
 prisma/            schema.prisma · seed.ts · migrations/
-scripts/           generate-csv.ts
 src/
-  app/             páginas · api/ (routes) · admin/
-  components/      ui · layout · sections · charts · dashboard · admin
-  lib/             prisma · auth · analytics · csv/{parse,transform,load} ·
-                   i18n/ · validation · serializers · api-docs · nfe-config
+  app/             páginas · api/ (routes) · admin/ · lab/
+  components/      ui · layout · sections · effects · lab · admin
+  lib/             prisma · auth · validation · serializers · i18n/
   contexts/        LocaleProvider · ThemeProvider
 ```

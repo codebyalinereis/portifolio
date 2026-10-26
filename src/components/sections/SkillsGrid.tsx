@@ -1,5 +1,6 @@
 import type { Technology } from "@prisma/client";
 import { SectionHeading } from "@/components/ui/primitives";
+import { SpotlightCard } from "@/components/effects/SpotlightCard";
 import type { Dictionary } from "@/lib/i18n";
 
 const CATEGORY_ORDER: Technology["category"][] = ["DATA", "BACKEND", "FRONTEND", "DEVOPS", "DOMAIN"];
@@ -34,19 +35,22 @@ export function SkillsGrid({ d, technologies }: { d: Dictionary; technologies: T
               key={group.category}
               data-reveal
               style={{ "--reveal-delay": `${index * 80}ms` } as React.CSSProperties}
-              className="rounded-lg border border-border bg-background p-5 transition-colors hover:border-accent/50"
             >
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-muted">
-                {d.skills.categories[group.category]}
-              </h3>
-              <ul className="space-y-2.5">
-                {group.items.map((technology) => (
-                  <li key={technology.id} className="flex items-center justify-between gap-3 text-sm">
-                    <span>{technology.name}</span>
-                    <LevelDots level={technology.level} label={d.skills.levelLabel} />
-                  </li>
-                ))}
-              </ul>
+              <SpotlightCard className="rounded-lg" tilt={false}>
+                <div className="h-full rounded-lg border border-border bg-background p-5 transition-colors hover:border-accent/50">
+                  <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-muted">
+                    {d.skills.categories[group.category]}
+                  </h3>
+                  <ul className="space-y-2.5">
+                    {group.items.map((technology) => (
+                      <li key={technology.id} className="flex items-center justify-between gap-3 text-sm">
+                        <span>{technology.name}</span>
+                        <LevelDots level={technology.level} label={d.skills.levelLabel} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </SpotlightCard>
             </div>
           ))}
         </div>

@@ -5,9 +5,9 @@ import type { Dictionary } from "./pt-BR";
 export const en: Dictionary = {
   locale: "en",
   metadata: {
-    title: "Aline Reis — Data Developer & Full Stack",
+    title: "Aline Reis — Full Stack & Data Developer",
     description:
-      "Back-end and full stack Data Developer: ETL pipelines, integrations, REST APIs, PostgreSQL, automation and tax data. Portfolio with a live ETL and analytics demo.",
+      "Aline Reis' portfolio: complete web applications, APIs, automations and data pipelines — plus a lab of interactive canvas experiments. Next.js, React, Node.js, Python and PostgreSQL.",
   },
 
   nav: {
@@ -18,8 +18,7 @@ export const en: Dictionary = {
     experience: "Experience",
     education: "Education",
     contact: "Contact",
-    dashboard: "Dashboard",
-    docs: "API Docs",
+    lab: "Lab",
     admin: "Admin",
   },
 
@@ -54,28 +53,28 @@ export const en: Dictionary = {
 
   hero: {
     name: "Aline Reis",
-    role: "Data Developer · Back-end & Full Stack",
+    roles: ["Full Stack Developer", "Data Developer", "Back-end & APIs", "Automation & Integrations"],
     location: "Uberlândia — MG, Brazil",
     summary:
-      "I build ETL pipelines, integrations and back-ends that run in production — from requirements gathering to delivery validation. Daily Python, Node.js, SQL and PostgreSQL, with a focus on data quality, automation and tax processes.",
+      "I build complete web applications — from the database to the last pixel: APIs, integrations, automations and interfaces that love to be touched. Daily TypeScript, React, Node.js, Python and SQL, with care for performance and detail.",
     ctaProjects: "View projects",
-    ctaDashboard: "View data demo",
+    ctaLab: "Explore the Lab",
     ctaContact: "Get in touch",
-    badges: ["Python", "Node.js", "SQL", "PostgreSQL", "ETL", "RabbitMQ · Kafka", "Docker", "React · Next.js"],
+    badges: ["React", "Next.js", "TypeScript", "Node.js", "Python", "PostgreSQL", "Docker", "n8n"],
   },
 
   about: {
     title: "About me",
     paragraphs: [
-      "I'm a developer focused on data: engineering and integration, process automation, ETL pipelines and back-end in production environments. I work with Python, SQL, Pentaho Data Integration, Node.js and REST APIs, plus relational and NoSQL databases, messaging with RabbitMQ and Kafka, and orchestration with n8n.",
-      "I've validated data quality and integrity, published jobs and supported critical systems — troubleshooting is part of the routine. I also work on the full stack side, connecting business needs, back-end services, integrations and front-end applications.",
-      "My edge is the Brazilian tax domain: I automated the generation of Tax Substitution (ST) guides for all 27 states (~90% reduction in operational time) and build solutions for the tax reform (IBS/CBS) assessment.",
+      "I'm a full stack developer with a strong data background: SQL modeling, ETL pipelines and system integration. On the front, TypeScript, React and Next.js; on the back, Node.js, Java and Python; and PostgreSQL as home for the data — with RabbitMQ, Kafka and Docker in the daily infra routine.",
+      "I love taking manual processes and returning reliable automation: I've cut entire operations' time by ~90% with RPA and orchestration. Data validation, observability and production troubleshooting are part of the craft.",
+      "Off code, I study data science and AI in college — and turn ideas into interactive experiments, like the ones in this page's Lab.",
     ],
     highlightTitle: "By the numbers",
     highlights: [
-      { value: "4+", label: "years with data and automation" },
-      { value: "~90%", label: "reduction in operational time on tax automation" },
-      { value: "27", label: "states with automated ST guides" },
+      { value: "4+", label: "years building software" },
+      { value: "~90%", label: "reduction in operational time through automation" },
+      { value: "5+", label: "projects delivered in production" },
     ],
   },
 
@@ -87,14 +86,14 @@ export const en: Dictionary = {
       BACKEND: "Back-end & APIs",
       DATA: "Data & ETL",
       DEVOPS: "Infra, Automation & Messaging",
-      DOMAIN: "Tax & Fiscal Domain",
+      DOMAIN: "Extras & Studies",
     },
     levelLabel: "level",
   },
 
   projects: {
     title: "Projects",
-    subtitle: "Solutions in production and case studies — from data pipeline to application.",
+    subtitle: "Solutions in production and case studies — from back-end to interface.",
     featuredLabel: "Featured",
     tech: "Technologies",
     repo: "Repository",
@@ -108,7 +107,7 @@ export const en: Dictionary = {
       BACKEND: "Back-end",
       DATA: "Data",
       DEVOPS: "Infra",
-      DOMAIN: "Tax",
+      DOMAIN: "Extras",
     },
   },
 
@@ -151,8 +150,7 @@ export const en: Dictionary = {
 
   footer: {
     rights: "All rights reserved.",
-    builtWith: "Built with Next.js, Prisma, PostgreSQL and Recharts.",
-    dataNote: "Dashboard data is fictional, generated for demonstration.",
+    builtWith: "Built with Next.js, Prisma, PostgreSQL and Tailwind — no templates.",
   },
 
   notFound: {
@@ -160,120 +158,44 @@ export const en: Dictionary = {
     subtitle: "The address you accessed doesn't exist (or has moved).",
   },
 
-  dashboard: {
-    title: "Dashboard — ETL & Analytics",
-    subtitle: "A real pipeline: invoices CSV → transformation → PostgreSQL → analytical SQL → charts.",
-    introTitle: "How this demo works",
-    intro: [
-      "The dataset compares the tax burden of the current regime (ICMS + PIS + COFINS) with the tax reform (IBS + CBS), invoice by invoice.",
-      "Upload a CSV (there's a sample file to download). The server parses it, validates each line with Zod, transforms Brazilian-formatted values and loads them into PostgreSQL in batches.",
-      "Then the analytics endpoints aggregate everything with SQL (aggregations, time series and breakdowns by state and category) — the same endpoints documented in the API Docs page.",
-    ],
-    upload: {
-      title: "1. Upload CSV",
-      hint: ".csv file up to 5 MB, ; separator and Brazilian-formatted values (1,234.56).",
-      choose: "Choose file",
-      uploading: "Uploading...",
-      processing: "Processing...",
-      dragHint: "Click or drag the file here",
-      steps: ["Received", "Parsing", "Transforming", "Loading", "Done"],
-      done: "done",
-      failed: "failed",
-      rows: "rows",
-      errors: "rows with errors",
-      duration: "time",
-      sampleCta: "Download sample CSV",
-      sampleHint: "generated by the same generator as the demo dataset",
-      invalidType: "Please send a .csv file.",
-      tooLarge: "5 MB limit exceeded.",
-      pipelineTitle: "Pipeline",
-    },
-    dataset: {
-      label: "2. Dataset",
-      empty: "No dataset available. Upload one or run the seed.",
-      rowCount: "rows",
-      created: "created at",
-      status: { PROCESSING: "Processing", DONE: "Ready", FAILED: "Failed" },
-    },
-    kpis: {
-      title: "3. Indicators",
-      invoices: "Invoices",
-      totalValue: "Total value",
-      avgValue: "Average ticket",
-      cargaAtual: "Current burden (ICMS+PIS+COFINS)",
-      cargaReforma: "IBS+CBS burden",
-      deltaLabel: "vs current regime",
-      credits: "IBS/CBS credits taken",
-    },
-    charts: {
-      trend: {
-        title: "Monthly tax burden",
-        subtitle: "Current regime × IBS+CBS, in R$ per month",
-        legendAtual: "Current regime",
-        legendReforma: "IBS+CBS",
+  lab: {
+    title: "Lab",
+    subtitle: "Interactive experiments handmade with canvas and React — move, click, play.",
+    flow: {
+      title: "Flow field",
+      subtitle: "Particles sailing a procedural noise field. The cursor attracts; a click bursts.",
+      density: "Density",
+      scheme: "Palette",
+      schemes: {
+        violet: "Violet",
+        aurora: "Aurora",
+        ocean: "Ocean",
+        sunset: "Sunset",
       },
-      uf: {
-        title: "Value by state",
-        subtitle: "Top 12 states by total invoice value",
-      },
-      category: {
-        title: "Share by category",
-        subtitle: "Total value by product/service category",
-        share: "share",
-      },
-      detailsLabel: "View data table",
-      empty: "No data to display.",
+      pause: "Pause",
+      play: "Resume",
+      hint: "Tip: hover and click on the canvas",
     },
-    table: {
-      title: "Invoice sample",
-      numero: "Number",
-      data: "Date",
-      emitente: "Issuer",
-      uf: "State",
-      categoria: "Category",
-      valor: "Total value",
-      cfop: "CFOP",
+    game: {
+      title: "Memory game",
+      subtitle: "Find the 8 stack pairs. Fewer moves, better.",
+      moves: "Moves",
+      time: "Time",
+      best: "Best",
+      reset: "Restart",
+      win: "You found all the pairs!",
+      newRecord: "New record!",
+      seconds: "s",
     },
-    filters: {
-      allUfs: "All states",
-      allCategories: "All categories",
-      label: "Filters",
+    race: {
+      title: "Data race",
+      subtitle: "Language popularity over time — live ranking, animation and a year scrubber.",
+      play: "Play",
+      pause: "Pause",
+      year: "Year",
+      valueLabel: "index points",
+      note: "Illustrative data, generated in the browser for demonstration only — the fun is real.",
     },
-    categories: {
-      ALIMENTOS: "Food",
-      COMBUSTIVEIS: "Fuels",
-      ELETRONICOS: "Electronics",
-      FARMACEUTICO: "Pharmaceutical",
-      METALURGICO: "Metallurgy",
-      SERVICOS: "Services",
-      VESTUARIO: "Apparel",
-      OUTROS: "Others",
-    },
-  },
-
-  docs: {
-    title: "API Docs",
-    subtitle: "Public endpoints of this project — the same API that feeds the dashboard.",
-    intro: "All responses are JSON. Analytics endpoints require datasetId (see GET /api/analytics/datasets). Monetary values are serialized as Number.",
-    endpointsTitle: "Endpoints",
-    description: "Description",
-    parameters: "Parameters",
-    response: "Response (abbreviated example)",
-    notesTitle: "Technical decisions",
-    notes: [
-      {
-        title: "Asynchronous ETL (fire-and-forget)",
-        body: "CSV processing runs in the background of the Node process, without an external queue. Fine for a demo/local setup; in production the next step would be BullMQ + Redis.",
-      },
-      {
-        title: "Decimal → Number",
-        body: "PostgreSQL stores Decimal(14,2), but JSON responses use Number — negligible loss at 14 digits and a simpler client.",
-      },
-      {
-        title: "Layered validation",
-        body: "Zod validates query params and payloads; each CSV line is individually validated in the transform step, with accumulated errors (aborts after 100).",
-      },
-    ],
   },
 
   admin: {
@@ -292,7 +214,6 @@ export const en: Dictionary = {
       technologies: "Technologies",
       experiences: "Experiences",
       messages: "Messages",
-      datasets: "Datasets",
       logout: "Sign out",
       viewSite: "View site",
     },
@@ -354,16 +275,6 @@ export const en: Dictionary = {
       markRead: "Mark as read",
       markUnread: "Mark as unread",
       empty: "No messages.",
-    },
-    datasets: {
-      title: "Demo datasets",
-      name: "Name",
-      source: "Source",
-      status: "Status",
-      rows: "Rows",
-      errors: "Errors",
-      created: "Created at",
-      empty: "No datasets.",
     },
   },
 };

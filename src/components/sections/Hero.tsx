@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { ArrowRight, BarChart3, MapPin } from "lucide-react";
+import { ArrowRight, MapPin, Sparkles } from "lucide-react";
 import { Badge, buttonClass } from "@/components/ui/primitives";
 import { ParticleField } from "@/components/effects/ParticleField";
+import { Typewriter } from "@/components/effects/Typewriter";
 import type { Dictionary } from "@/lib/i18n";
 
 export function Hero({ d }: { d: Dictionary }) {
@@ -30,7 +31,9 @@ export function Hero({ d }: { d: Dictionary }) {
           className="max-w-3xl text-4xl font-bold tracking-tight text-balance sm:text-6xl"
         >
           <span className="text-gradient">{d.hero.name}</span>
-          <span className="mt-3 block text-xl font-semibold text-accent sm:text-2xl">{d.hero.role}</span>
+          <span className="mt-3 block h-8 text-xl font-semibold text-accent sm:h-9 sm:text-2xl">
+            <Typewriter words={d.hero.roles} />
+          </span>
         </h1>
         <p
           data-reveal
@@ -54,8 +57,8 @@ export function Hero({ d }: { d: Dictionary }) {
           <Link href="/projects" className={buttonClass("primary")}>
             {d.hero.ctaProjects} <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
-          <Link href="/dashboard" className={buttonClass("outline")}>
-            <BarChart3 className="h-4 w-4" aria-hidden="true" /> {d.hero.ctaDashboard}
+          <Link href="/lab" className={buttonClass("outline")}>
+            <Sparkles className="h-4 w-4 text-accent" aria-hidden="true" /> {d.hero.ctaLab}
           </Link>
           <a href="#contato" className={buttonClass("ghost")}>
             {d.hero.ctaContact}

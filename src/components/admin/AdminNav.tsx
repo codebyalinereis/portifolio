@@ -17,7 +17,6 @@ export function AdminNav() {
     { href: "/admin/skills", label: d.admin.nav.technologies },
     { href: "/admin/experiences", label: d.admin.nav.experiences },
     { href: "/admin/messages", label: d.admin.nav.messages },
-    { href: "/admin/datasets", label: d.admin.nav.datasets },
   ];
 
   async function handleLogout() {

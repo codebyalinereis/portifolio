@@ -1,6 +1,6 @@
 "use client";
 
-import { adminFetch, DeleteButton, TableShell, useAdminList } from "@/components/admin/crud";
+import { adminFetch, DeleteButton, useAdminList } from "@/components/admin/crud";
 import { useI18n } from "@/contexts/LocaleProvider";
 import { cn } from "@/lib/utils";
 
