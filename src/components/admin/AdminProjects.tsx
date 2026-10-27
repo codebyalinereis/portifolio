@@ -21,6 +21,8 @@ type AdminProject = {
   title: string;
   titleEn: string | null;
   summary: string;
+  detail: string | null;
+  detailEn: string | null;
   featured: boolean;
   order: number;
   repoUrl: string | null;
@@ -36,6 +38,8 @@ type FormState = {
   titleEn: string;
   summary: string;
   summaryEn: string;
+  detail: string;
+  detailEn: string;
   order: number;
   featured: boolean;
   repoUrl: string;
@@ -44,7 +48,7 @@ type FormState = {
 };
 
 const EMPTY: FormState = {
-  slug: "", title: "", titleEn: "", summary: "", summaryEn: "",
+  slug: "", title: "", titleEn: "", summary: "", summaryEn: "", detail: "", detailEn: "",
   order: 0, featured: false, repoUrl: "", liveUrl: "", technologyIds: [],
 };
 
@@ -72,6 +76,8 @@ export function AdminProjects() {
       titleEn: project.titleEn ?? "",
       summary: project.summary,
       summaryEn: "",
+      detail: project.detail ?? "",
+      detailEn: project.detailEn ?? "",
       order: project.order,
       featured: project.featured,
       repoUrl: project.repoUrl ?? "",
@@ -90,6 +96,8 @@ export function AdminProjects() {
       ...form,
       titleEn: form.titleEn || null,
       summaryEn: form.summaryEn || null,
+      detail: form.detail || null,
+      detailEn: form.detailEn || null,
       repoUrl: form.repoUrl || null,
       liveUrl: form.liveUrl || null,
     };
@@ -135,6 +143,12 @@ export function AdminProjects() {
           </Field>
           <Field label={`${a.summaryEn} (${d.common.optional})`}>
             <textarea rows={2} value={form.summaryEn} onChange={(e) => setForm({ ...form, summaryEn: e.target.value })} className={inputClass} />
+          </Field>
+          <Field label={`${a.detail} (${d.common.optional} — "## " vira título, "- " vira item de lista)`}>
+            <textarea rows={10} value={form.detail} onChange={(e) => setForm({ ...form, detail: e.target.value })} className={`${inputClass} font-mono text-xs`} />
+          </Field>
+          <Field label={`${a.detailEn} (${d.common.optional})`}>
+            <textarea rows={10} value={form.detailEn} onChange={(e) => setForm({ ...form, detailEn: e.target.value })} className={`${inputClass} font-mono text-xs`} />
           </Field>
           <div className="grid gap-3 md:grid-cols-2">
             <Field label={`${a.repoUrl} (${d.common.optional})`}>

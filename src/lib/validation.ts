@@ -15,6 +15,7 @@ export const projectInputSchema = z.object({
   summary: z.string().min(10).max(600),
   summaryEn: z.string().max(600).optional().nullable(),
   detail: z.string().max(8000).optional().nullable(),
+  detailEn: z.string().max(8000).optional().nullable(),
   repoUrl: z.string().url().optional().nullable().or(z.literal("")),
   liveUrl: z.string().url().optional().nullable().or(z.literal("")),
   featured: z.boolean().default(false),

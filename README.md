@@ -63,6 +63,7 @@ A senha do admin é **a que você definir** no `ADMIN_PASSWORD_HASH_B64` (comand
 |---|---|
 | `/` | One-page: hero com typewriter, marquee do stack, sobre, skills com níveis, projetos, experiência, contato |
 | `/projects` | Projetos completos com filtro por stack |
+| `/projects/[slug]` | Estudo de caso do projeto: contexto, solução, bastidores e resultados (bilíngue) |
 | `/lab` | **Lab interativo**: campo de fluxo generativo em canvas (cursor atrai, clique explode, densidade e paleta ajustáveis) + corrida de dados (bar chart race com scrubber de anos) + jogo da memória da stack com recorde |
 | `/admin` | Painel CRUD (projetos, skills, experiências, mensagens) — login em `/admin/login` |
 

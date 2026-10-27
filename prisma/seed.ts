@@ -74,6 +74,46 @@ async function main() {
         "Orquestração de ponta a ponta de rotinas que antes eram manuais: agendamento, filas com RabbitMQ, retry com backoff e painel de acompanhamento — redução reportada de ~90% no tempo operacional.",
       summaryEn:
         "End-to-end orchestration of previously manual routines: scheduling, RabbitMQ queues, retry with backoff and a monitoring panel — a reported ~90% reduction in operational time.",
+      detail: `## Contexto
+
+Uma operação inteira rodava na mão: abrir sistemas, copiar dados entre telas, conferir planilhas e torcer para nada ser esquecido no fim do dia. Repetitivo, lento — e com risco real de erro humano em etapa crítica.
+
+## A solução
+
+Uma plataforma de orquestração que assumiu a rotina de ponta a ponta:
+
+- Fluxos no n8n orquestrando cada etapa do processo, com agendamento e retomada
+- Workers em Node.js consumindo filas RabbitMQ, com retry exponencial e dead-letter
+- Estado persistido em PostgreSQL — cada execução auditável, do gatilho ao resultado
+- Painel de acompanhamento com histórico de execuções e alertas de falha
+
+## Bastidores
+
+O desafio não é automatizar o caminho feliz — é o que fazer quando um sistema externo cai no meio do lote. Idempotência por chave de negócio, backoff para não derrubar a API de terceiros e rastreabilidade por execução foram decisões mais importantes que qualquer framework.
+
+## Resultados
+
+A rotina que consumia horas de trabalho manual passou a rodar sozinha, com redução reportada de ~90% no tempo operacional — e o mesmo padrão de arquitetura foi replicado para outros processos.`,
+      detailEn: `## Context
+
+An entire operation ran by hand: opening systems, copying data between screens, checking spreadsheets and hoping nothing was forgotten by end of day. Repetitive, slow — and with real risk of human error at a critical step.
+
+## The solution
+
+An orchestration platform that took over the routine end to end:
+
+- n8n flows orchestrating every step of the process, with scheduling and resumption
+- Node.js workers consuming RabbitMQ queues, with exponential retry and dead-letter
+- State persisted in PostgreSQL — every execution auditable, from trigger to result
+- A monitoring panel with execution history and failure alerts
+
+## Behind the scenes
+
+The challenge isn't automating the happy path — it's what happens when an external system goes down mid-batch. Idempotency by business key, backoff so third-party APIs aren't knocked over and per-execution traceability were decisions that mattered more than any framework.
+
+## Results
+
+A routine that consumed hours of manual work started running on its own, with a reported ~90% reduction in operational time — and the same architecture pattern was replicated to other processes.`,
       featured: true,
       order: 1,
       techs: ["Node.js", "n8n", "PostgreSQL", "RabbitMQ"],
@@ -86,6 +126,46 @@ async function main() {
         "Aplicação web completa com dashboards, CRUD, autenticação e dashboards analíticos: Next.js + React no front, APIs REST no back e PostgreSQL — bilíngue, com tema claro/escuro.",
       summaryEn:
         "Complete web application with dashboards, CRUD, authentication and analytics: Next.js + React on the front, REST APIs on the back and PostgreSQL — bilingual, with light/dark theme.",
+      detail: `## Contexto
+
+A informação que o time precisava estava espalhada entre sistemas e planilhas, e cada consulta virava um pedido para outra área. O gargalo não era falta de dado — era falta de interface.
+
+## A solução
+
+Um portal web completo para centralizar a operação:
+
+- Dashboards com indicadores em tempo real e CRUD completo das entidades
+- Autenticação com sessão selada (cookie httpOnly), rate-limit no login e validação de contrato com Zod
+- API REST própria em Node.js, com PostgreSQL como casa dos dados
+- Bilíngue (pt-BR/EN) com tema claro/escuro — i18n por dicionário, sem rota por locale
+
+## Bastidores
+
+Next.js App Router com Server Components: o dado sai do Prisma e vira HTML no servidor, com pouco JavaScript no cliente. O cache de página foi desligado de propósito — o conteúdo do painel precisa refletir o CRUD na hora, não daqui a um revalidate.
+
+## Resultados
+
+Uma única porta de entrada para a operação: menos contexto trocado por chat, menos planilha paralela e consultas que dependiam de outra área viraram autoatendimento.`,
+      detailEn: `## Context
+
+The information the team needed was scattered across systems and spreadsheets, and every lookup became a request to another area. The bottleneck wasn't lack of data — it was lack of interface.
+
+## The solution
+
+A complete web portal to centralize the operation:
+
+- Dashboards with real-time indicators and full CRUD for entities
+- Authentication with a sealed session (httpOnly cookie), login rate-limiting and contract validation with Zod
+- A REST API of its own on Node.js, with PostgreSQL as home for the data
+- Bilingual (pt-BR/EN) with light/dark theme — dictionary-based i18n, no per-locale routes
+
+## Behind the scenes
+
+Next.js App Router with Server Components: data leaves Prisma and becomes HTML on the server, with little client-side JavaScript. Page caching was turned off on purpose — panel content must reflect CRUD changes immediately, not after a revalidate.
+
+## Results
+
+A single entry point for the operation: less context swapped over chat, fewer parallel spreadsheets, and lookups that depended on another area became self-service.`,
       featured: true,
       order: 2,
       techs: ["Next.js", "React", "TypeScript", "Tailwind CSS", "PostgreSQL"],
@@ -98,6 +178,46 @@ async function main() {
         "Construção e manutenção de pipelines full e incrementais (Python + Pentaho) para coleta, transformação, padronização e validação de dados — com qualidade, disponibilidade e suporte a rotinas críticas em produção.",
       summaryEn:
         "Building and maintaining full and incremental pipelines (Python + Pentaho) for data collection, transformation, standardization and validation — with quality, availability and support for critical production routines.",
+      detail: `## Contexto
+
+Dados de várias fontes, formatos e donos — e relatórios que só eram confiáveis se alguém conferisse na mão. Sem padrão de extração, cada fonte nova virava um projeto paralelo.
+
+## A solução
+
+Pipelines ETL full e incrementais, em Python e Pentaho Data Integration:
+
+- Extração de fontes heterogêneas (bancos, APIs, arquivos) com padrão único de transformação
+- Cargas incrementais por marca d'água e rotinas full programadas para a janela noturna
+- Camada de validação: consistência, completude e unicidade checadas a cada execução
+- PostgreSQL como repositório central, com modelagem voltada para consulta
+
+## Bastidores
+
+Pipeline que falha às 3h da manhã e ninguém percebe até a reunião é pior do que não ter pipeline. Monitoramento das rotinas críticas, log por execução e tratamento de erro por bloco entraram no primeiro desenho — não como remendo depois.
+
+## Resultados
+
+Rotinas críticas rodando em produção com qualidade e disponibilidade de dados sustentadas — e relatórios que pararam de depender de conferência manual.`,
+      detailEn: `## Context
+
+Data from many sources, formats and owners — and reports that were only trustworthy if someone checked them by hand. Without an extraction standard, every new source became a parallel project.
+
+## The solution
+
+Full and incremental ETL pipelines, in Python and Pentaho Data Integration:
+
+- Extraction from heterogeneous sources (databases, APIs, files) with a single transformation standard
+- Incremental loads by high-water mark and full routines scheduled for the overnight window
+- A validation layer: consistency, completeness and uniqueness checked on every run
+- PostgreSQL as the central repository, with query-oriented modeling
+
+## Behind the scenes
+
+A pipeline that fails at 3 a.m. and nobody notices until the morning meeting is worse than no pipeline at all. Monitoring of critical routines, per-execution logging and per-block error handling were part of the first design — not patched on later.
+
+## Results
+
+Critical routines running in production with sustained data quality and availability — and reports that no longer depend on manual checking.`,
       featured: true,
       order: 3,
       techs: ["Python", "Pentaho Data Integration", "PostgreSQL", "ETL & Pipelines", "Qualidade & Validação de Dados"],
@@ -110,6 +230,46 @@ async function main() {
         "Microsserviço com motor de segmentação de descrições de produtos (NLP) que sugere classificações e enriquece cadastros, com dicionário carregado do banco e corpus de treino em SQL.",
       summaryEn:
         "Microservice with a product-description segmentation engine (NLP) that suggests classifications and enriches records, with a database-loaded dictionary and SQL training corpus.",
+      detail: `## Contexto
+
+Cadastros com descrições em texto livre: cada pessoa escreve o mesmo produto de um jeito, e classificar tudo na mão não escala com o volume.
+
+## A solução
+
+Um microsserviço com motor de classificação por NLP:
+
+- Segmentação de descrições (tokenização, normalização e remoção de ruído) para "entender" o texto
+- Dicionário de termos carregado do banco — regra nova entra por dado, sem redeploy
+- Corpus de treino versionado em SQL, com métricas de acerto por versão
+- Endpoint que sugere classificações e enriquece o cadastro sob demanda
+
+## Bastidores
+
+Java + Spring Boot porque o ecossistema da integração já falava JVM. O NLP em si é engenharia de features: quanto melhor o dicionário, menos o modelo precisa adivinhar. A resposta volta com o score da sugestão para o humano decidir — automação como copiloto, não como decisão final.
+
+## Resultados
+
+Classificação de cadastros acelerada com sugestões auditáveis e um catálogo mais consistente ao longo do tempo.`,
+      detailEn: `## Context
+
+Records with free-text descriptions: everyone writes the same product differently, and classifying everything by hand doesn't scale with volume.
+
+## The solution
+
+A microservice with an NLP classification engine:
+
+- Description segmentation (tokenization, normalization and noise removal) so the text can be "understood"
+- A term dictionary loaded from the database — new rules arrive as data, no redeploy
+- A training corpus versioned in SQL, with per-version accuracy metrics
+- An endpoint that suggests classifications and enriches records on demand
+
+## Behind the scenes
+
+Java + Spring Boot because the surrounding integration ecosystem already spoke JVM. The NLP itself is feature engineering: the better the dictionary, the less the model has to guess. Responses come back with a match score for a human to decide — automation as a copilot, not as the final call.
+
+## Results
+
+Faster record classification with auditable suggestions and a catalog that stays more consistent over time.`,
       featured: false,
       order: 4,
       techs: ["Java", "Spring Boot", "PostgreSQL", "NLP & Processamento de Texto"],
@@ -122,6 +282,46 @@ async function main() {
         "Parser e ingestão de arquivos XML/CSV em lote (.zip), com validação por linha, rastreabilidade de erros e armazenamento em object storage — milhares de registros por carga.",
       summaryEn:
         "Batch XML/CSV file parser and ingestion (.zip), with per-line validation, error traceability and object storage — thousands of records per load.",
+      detail: `## Contexto
+
+Lotes de arquivos XML e CSV chegando compactados em .zip, com milhares de registros por carga — e validação feita a olho, linha por linha.
+
+## A solução
+
+Um pipeline de ingestão em lote:
+
+- Descompactação, detecção de formato e parser tolerante para XML e CSV
+- Validação por linha: registro inválido não derruba o lote — é separado com o motivo do erro
+- Rastreabilidade total: cada arquivo tem seu resultado, cada linha tem seu status
+- Armazenamento do original em object storage (MinIO/S3) para auditoria e reprocessamento
+
+## Bastidores
+
+O insight que salvou a operação: separar "lote" de "linha". Antes, um único registro ruim rejeitava o arquivo inteiro, e tudo voltava para o fornecedor. Com validação granular e relatório de erros por linha, o lote entra e o que falha é corrigido pontualmente — sem retrabalhar o que já estava certo.
+
+## Resultados
+
+Milhares de registros ingeridos por carga, com rastreabilidade de erros e o arquivo original sempre recuperável para reprocessar.`,
+      detailEn: `## Context
+
+Batches of XML and CSV files arriving compressed in .zip, with thousands of records per load — and validation done by eye, line by line.
+
+## The solution
+
+A batch ingestion pipeline:
+
+- Unpacking, format detection and a tolerant parser for XML and CSV
+- Per-line validation: an invalid record doesn't sink the batch — it's set aside with the error reason
+- Full traceability: every file has its result, every line has its status
+- Original stored in object storage (MinIO/S3) for auditing and reprocessing
+
+## Behind the scenes
+
+The insight that saved the operation: separating "batch" from "line". Before, a single bad record rejected the whole file, and everything went back to the supplier. With granular validation and a per-line error report, the batch goes in and only what failed gets fixed — without redoing what was already right.
+
+## Results
+
+Thousands of records ingested per load, with error traceability and the original file always recoverable for reprocessing.`,
       featured: false,
       order: 5,
       techs: ["Node.js", "Python", "PostgreSQL", "MinIO / S3"],
@@ -136,6 +336,8 @@ async function main() {
         titleEn: project.titleEn,
         summary: project.summary,
         summaryEn: project.summaryEn,
+        detail: project.detail,
+        detailEn: project.detailEn,
         featured: project.featured,
         order: project.order,
         technologies: {

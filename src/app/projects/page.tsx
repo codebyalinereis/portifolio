@@ -77,6 +77,7 @@ export default async function ProjectsPage({ searchParams }: PageProps<"/project
               locale={locale}
               featuredLabel={d.projects.featuredLabel}
               techLabel={d.projects.tech}
+              detailLabel={d.projects.detail}
             />
           ))}
         </div>

@@ -23,17 +23,23 @@ export function ProjectCard({
   locale,
   featuredLabel,
   techLabel,
+  detailLabel,
 }: {
   project: ProjectWithTech;
   locale: Locale;
   featuredLabel: string;
   techLabel: string;
+  detailLabel: string;
 }) {
   return (
     <SpotlightCard className="rounded-lg">
       <article className="group flex h-full flex-col rounded-lg border border-border bg-surface p-6 transition-colors hover:border-accent">
       <div className="mb-2 flex items-start justify-between gap-2">
-        <h3 className="text-lg font-semibold leading-snug">{projectTitle(project, locale)}</h3>
+        <h3 className="text-lg font-semibold leading-snug">
+          <Link href={`/projects/${project.slug}`} className="transition-colors hover:text-accent">
+            {projectTitle(project, locale)}
+          </Link>
+        </h3>
         {project.featured ? (
           <Badge className="shrink-0 border-accent/40 text-accent">
             <Star className="mr-1 h-3 w-3" aria-hidden="true" /> {featuredLabel}
@@ -51,30 +57,34 @@ export function ProjectCard({
           ))}
         </div>
       </div>
-      {(project.repoUrl || project.liveUrl) && (
-        <div className="mt-4 flex items-center gap-3 text-sm">
-          {project.repoUrl ? (
-            <a
-              href={project.repoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-muted hover:text-foreground"
-            >
-              <FolderGit2 className="h-3.5 w-3.5" aria-hidden="true" /> repo
-            </a>
-          ) : null}
-          {project.liveUrl ? (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-accent hover:underline"
-            >
-              live <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
-          ) : null}
-        </div>
-      )}
+      <div className="mt-4 flex items-center gap-3 text-sm">
+        <Link
+          href={`/projects/${project.slug}`}
+          className="inline-flex items-center gap-1 text-accent hover:underline"
+        >
+          {detailLabel} <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </Link>
+        {project.repoUrl ? (
+          <a
+            href={project.repoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-muted hover:text-foreground"
+          >
+            <FolderGit2 className="h-3.5 w-3.5" aria-hidden="true" /> repo
+          </a>
+        ) : null}
+        {project.liveUrl ? (
+          <a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-muted hover:text-foreground"
+          >
+            live <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </a>
+        ) : null}
+      </div>
       </article>
     </SpotlightCard>
   );
@@ -114,6 +124,7 @@ export function ProjectsShowcase({
                 locale={locale}
                 featuredLabel={d.projects.featuredLabel}
                 techLabel={d.projects.tech}
+                detailLabel={d.projects.detail}
               />
             </div>
           ))}

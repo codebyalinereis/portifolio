@@ -28,6 +28,7 @@ model Project {
   summary      String   @db.Text
   summaryEn    String?  @db.Text
   detail       String?  @db.Text
+  detailEn     String?  @db.Text
   repoUrl      String?
   liveUrl      String?
   featured     Boolean  @default(false)
