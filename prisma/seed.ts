@@ -82,6 +82,7 @@ Uma operação inteira rodava na mão: abrir sistemas, copiar dados entre telas,
 
 Uma plataforma de orquestração que assumiu a rotina de ponta a ponta:
 
+- Escopo refinado em conjunto com o time de operação: cada etapa da rotina foi mapeada com quem a executava, antes de virar fluxo
 - Fluxos no n8n orquestrando cada etapa do processo, com agendamento e retomada
 - Workers em Node.js consumindo filas RabbitMQ, com retry exponencial e dead-letter
 - Estado persistido em PostgreSQL — cada execução auditável, do gatilho ao resultado
@@ -102,6 +103,7 @@ An entire operation ran by hand: opening systems, copying data between screens, 
 
 An orchestration platform that took over the routine end to end:
 
+- Scope refined together with the operations team: every step of the routine was mapped with the people who executed it, before it became a flow
 - n8n flows orchestrating every step of the process, with scheduling and resumption
 - Node.js workers consuming RabbitMQ queues, with exponential retry and dead-letter
 - State persisted in PostgreSQL — every execution auditable, from trigger to result
@@ -297,7 +299,7 @@ Um pipeline de ingestão em lote:
 
 ## Bastidores
 
-O insight que salvou a operação: separar "lote" de "linha". Antes, um único registro ruim rejeitava o arquivo inteiro, e tudo voltava para o fornecedor. Com validação granular e relatório de erros por linha, o lote entra e o que falha é corrigido pontualmente — sem retrabalhar o que já estava certo.
+O insight que salvou a operação: separar "lote" de "linha" — conclusão que saiu de uma sessão de refinamento com a operação, acompanhando o fluxo real de ponta a ponta. Antes, um único registro ruim rejeitava o arquivo inteiro, e tudo voltava para o fornecedor. Com validação granular e relatório de erros por linha, o lote entra e o que falha é corrigido pontualmente — sem retrabalhar o que já estava certo.
 
 ## Resultados
 
@@ -317,7 +319,7 @@ A batch ingestion pipeline:
 
 ## Behind the scenes
 
-The insight that saved the operation: separating "batch" from "line". Before, a single bad record rejected the whole file, and everything went back to the supplier. With granular validation and a per-line error report, the batch goes in and only what failed gets fixed — without redoing what was already right.
+The insight that saved the operation: separating "batch" from "line" — a conclusion that came out of a refinement session with operations, following the real flow end to end. Before, a single bad record rejected the whole file, and everything went back to the supplier. With granular validation and a per-line error report, the batch goes in and only what failed gets fixed — without redoing what was already right.
 
 ## Results
 
@@ -360,9 +362,9 @@ Thousands of records ingested per load, with error traceability and the original
       current: true,
       order: 1,
       description:
-        "Desenvolvimento e manutenção de soluções back-end e fluxos de automação para processos críticos de negócio, do levantamento de requisitos à validação das entregas. Automações que reduziram em ~90% o tempo de operações inteiras e integração entre sistemas para maior confiabilidade e cumprimento de prazos.",
+        "Participação ativa no refinamento funcional das demandas ao lado de negócio e operação — da necessidade ao escopo coeso e daí ao código: desenvolvimento e manutenção de soluções back-end e fluxos de automação para processos críticos. Automações que reduziram em ~90% o tempo de operações inteiras, integração entre sistemas para maior confiabilidade e cumprimento de prazos, e validação das entregas com quem pediu.",
       descriptionEn:
-        "Development and maintenance of back-end solutions and automation flows for critical business processes, from requirements gathering to delivery validation. Automations that cut entire operations' time by ~90% and system integration for higher reliability and deadline compliance.",
+        "Active part in functional refinement alongside business and operations — from need to cohesive scope, and from there to code: development and maintenance of back-end solutions and automation flows for critical processes. Automations that cut entire operations' time by ~90%, system integration for higher reliability and deadline compliance, and delivery validation with the people who asked for it.",
     },
     {
       role: "RPA Developer | Automação de Dados e Integrações",
@@ -373,9 +375,9 @@ Thousands of records ingested per load, with error traceability and the original
       current: false,
       order: 2,
       description:
-        "Automações com Node.js e Puppeteer com foco em estabilidade, rastreabilidade e execução em produção. Pipelines ETL com Python e Pentaho Data Integration; integração com APIs corporativas e persistência em PostgreSQL e NoSQL. Participação em deploys, versionamento, monitoramento e troubleshooting junto às áreas de negócio.",
+        "Automações com Node.js e Puppeteer com foco em estabilidade, rastreabilidade e execução em produção. Pipelines ETL com Python e Pentaho Data Integration; integração com APIs corporativas e persistência em PostgreSQL e NoSQL. Participação no refinamento funcional das demandas, deploys, versionamento, monitoramento e troubleshooting junto às áreas de negócio.",
       descriptionEn:
-        "Node.js and Puppeteer automations focused on stability, traceability and production execution. ETL pipelines with Python and Pentaho Data Integration; corporate API integration and persistence in PostgreSQL and NoSQL. Participation in deploys, versioning, monitoring and troubleshooting alongside business areas.",
+        "Node.js and Puppeteer automations focused on stability, traceability and production execution. ETL pipelines with Python and Pentaho Data Integration; corporate API integration and persistence in PostgreSQL and NoSQL. Participation in functional refinement of demands, deploys, versioning, monitoring and troubleshooting alongside business areas.",
     },
     {
       role: "Data Developer | ETL e Integração de Dados",

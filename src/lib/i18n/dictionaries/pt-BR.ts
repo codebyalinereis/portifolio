@@ -65,7 +65,7 @@ export const ptBR = {
     title: "Sobre mim",
     paragraphs: [
       "Sou desenvolvedora full stack com forte bagagem em dados: modelagem SQL, pipelines ETL e integração entre sistemas. No front, TypeScript, React e Next.js; no back, Node.js, Java e Python; e PostgreSQL como casa dos dados — com RabbitMQ, Kafka e Docker no dia a dia de infra.",
-      "Gosto de pegar processo manual e devolver automação confiável: já reduzi em ~90% o tempo de operações inteiras com RPA e orquestração. Validação de dados, observabilidade e troubleshooting em produção fazem parte do ofício.",
+      "Perto de quem usa o sistema, participo do refinamento funcional de ponta a ponta: entender a necessidade de negócio com o time de operação, traduzir em escopo coeso e só então codar. Gosto de pegar processo manual e devolver automação confiável: já reduzi em ~90% o tempo de operações inteiras com RPA e orquestração. Validação de dados, observabilidade e troubleshooting em produção fazem parte do ofício.",
       "Fora do código, estudo ciência de dados e IA na graduação — e transformo ideias em experimentos interativos, como os do Lab desta página.",
     ],
     highlightTitle: "Em números",

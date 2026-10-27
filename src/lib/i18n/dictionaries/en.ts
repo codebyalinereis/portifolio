@@ -67,7 +67,7 @@ export const en: Dictionary = {
     title: "About me",
     paragraphs: [
       "I'm a full stack developer with a strong data background: SQL modeling, ETL pipelines and system integration. On the front, TypeScript, React and Next.js; on the back, Node.js, Java and Python; and PostgreSQL as home for the data — with RabbitMQ, Kafka and Docker in the daily infra routine.",
-      "I love taking manual processes and returning reliable automation: I've cut entire operations' time by ~90% with RPA and orchestration. Data validation, observability and production troubleshooting are part of the craft.",
+      "Close to those who use the system, I take part in functional refinement end to end: understanding the business need with the operations team, translating it into a cohesive scope and only then coding. I love taking manual processes and returning reliable automation — I've cut entire operations' time by ~90% with RPA and orchestration. Data validation, observability and production troubleshooting are part of the craft.",
       "Off code, I study data science and AI in college — and turn ideas into interactive experiments, like the ones in this page's Lab.",
     ],
     highlightTitle: "By the numbers",
