@@ -76,6 +76,31 @@ export const ptBR = {
     ],
   },
 
+  refinement: {
+    title: "Do negócio ao código",
+    subtitle:
+      "Refinamento funcional faz parte do ofício: sento com negócio e operação, entendo a dor no fluxo real e só então construo. É o que separa software entregue de software adotado.",
+    steps: [
+      {
+        title: "Entender",
+        text: "Sentar com quem opera e ver o processo de verdade — a dor que o ticket não conta, o passo que ninguém escreveu.",
+      },
+      {
+        title: "Refinar",
+        text: "Traduzir a necessidade em escopo coeso junto de negócio e operação: questionar, desenhar exemplos, cortar o que não agrega.",
+      },
+      {
+        title: "Construir",
+        text: "Com o escopo limpo, o código rende: back-end, automação e interface no mesmo ritmo — sem retrabalho por especificação ruim.",
+      },
+      {
+        title: "Validar",
+        text: "Rodar junto com quem pediu, ajustar o que a realidade mostrar e medir o ganho — como os ~90% de tempo operacional recuperados.",
+      },
+    ],
+    note: "Rotina em todos os projetos em produção: refinamento com times de negócio e operação do início ao fim.",
+  },
+
   skills: {
     title: "Skills",
     subtitle: "Ferramentas com que trabalho, agrupadas por área.",

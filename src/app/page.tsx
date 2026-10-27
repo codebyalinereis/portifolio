@@ -4,6 +4,7 @@ import { getDictionary, isLocale, DEFAULT_LOCALE, LOCALE_COOKIE } from "@/lib/i1
 import type { Locale } from "@/lib/i18n";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
+import { Refinement } from "@/components/sections/Refinement";
 import { SkillsGrid } from "@/components/sections/SkillsGrid";
 import { ProjectsShowcase } from "@/components/sections/ProjectsShowcase";
 import { ExperienceTimeline } from "@/components/sections/ExperienceTimeline";
@@ -37,6 +38,7 @@ export default async function HomePage() {
       <Hero d={d} />
       <TechMarquee items={d.hero.badges} />
       <About d={d} />
+      <Refinement d={d} />
       <SkillsGrid d={d} technologies={technologies} />
       <ProjectsShowcase d={d} locale={locale} projects={featuredProjects} />
       <ExperienceTimeline d={d} locale={locale} experiences={experiences} />

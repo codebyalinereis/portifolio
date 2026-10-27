@@ -78,6 +78,31 @@ export const en: Dictionary = {
     ],
   },
 
+  refinement: {
+    title: "From business to code",
+    subtitle:
+      "Functional refinement is part of the craft: I sit with business and operations, understand the pain in the real flow and only then build. It's what separates delivered software from adopted software.",
+    steps: [
+      {
+        title: "Understand",
+        text: "Sit with the people who run the process and watch it for real — the pain the ticket doesn't tell, the step nobody wrote down.",
+      },
+      {
+        title: "Refine",
+        text: "Translate the need into a cohesive scope with business and operations: challenge, sketch examples, cut what adds nothing.",
+      },
+      {
+        title: "Build",
+        text: "With a clean scope, code flows: back-end, automation and interface at the same pace — no rework from a poor specification.",
+      },
+      {
+        title: "Validate",
+        text: "Run it with whoever asked, adjust what reality reveals and measure the gain — like the ~90% of operational time recovered.",
+      },
+    ],
+    note: "Routine across every project in production: refinement with business and operations teams, start to finish.",
+  },
+
   skills: {
     title: "Skills",
     subtitle: "Tools I work with, grouped by area.",
