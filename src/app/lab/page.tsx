@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LabBackdrop } from "@/components/lab/LabBackdrop";
 import { Raymarcher } from "@/components/lab/Raymarcher";
 import { FlowField } from "@/components/lab/FlowField";
 import { DataRace } from "@/components/lab/DataRace";
@@ -13,7 +14,8 @@ export const metadata: Metadata = {
 
 export default function LabPage() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col isolate">
+      <LabBackdrop />
       <Raymarcher />
       <FlowField />
       <DataRace />

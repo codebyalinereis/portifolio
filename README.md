@@ -70,7 +70,7 @@ A senha do admin é **a que você definir** no `ADMIN_PASSWORD_HASH_B64` (comand
 
 ### Interações (o coração do front)
 
-- **Escultura procedural** (`/lab`): raymarching em GLSL puro (sem three.js) — SDF de giroide morfando dentro de uma esfera, sombra suave, AO e névoa; câmera orbital com auto-rotação e arraste; cores lidas dos tokens do tema.
+- **Escultura procedural** (`/lab`): raymarching em GLSL puro (sem three.js) — SDF de prisma de cristal com giroide pulsando dentro e núcleo contra-rotativo, sombra suave, AO e névoa; câmera orbital com auto-rotação e arraste; cores lidas dos tokens do tema.
 - **Máquina de Fourier** (`/lab`): desenhe à mão; a curva é reamostrada por comprimento de arco, passa por uma DFT O(N²) escrita no componente e é redesenhada por círculos engatados animados.
 - **Campo de fluxo** (`/lab`): partículas seguem um campo de ângulos procedural (senoides compostas), rastro em cometa, atração pelo cursor e explosão no clique — canvas 2D puro, dpr-aware.
 - **Corrida de dados** (`/lab`): bar chart race 2010–2026 com interpolação linear entre keyframes, ranking animado em CSS transforms e scrubber de anos; paleta validada para daltonismo nos dois temas e cor fixa por linguagem.

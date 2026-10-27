@@ -164,7 +164,7 @@ export const en: Dictionary = {
     shader: {
       title: "Procedural sculpture",
       subtitle:
-        "Raymarching in pure GLSL, no three.js: the geometry is a signed distance field (a gyroid morphing inside a sphere) and every pixel marches a ray until it finds the surface — with soft shadows, ambient occlusion and fog. Drag to orbit.",
+        "Raymarching in pure GLSL, no three.js: the geometry is a signed distance field — a crystal prism with a pulsing lattice inside and a counter-rotating core — and every pixel marches a ray until it finds the surface, with soft shadows, ambient occlusion and fog. Drag to orbit.",
       pause: "Pause",
       play: "Resume",
       hint: "Drag to orbit the camera",

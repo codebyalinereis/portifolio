@@ -6,7 +6,8 @@ import { useI18n } from "@/contexts/LocaleProvider";
 
 /* Raymarching WebGL puro: um fullscreen triangle + fragment shader GLSL.
    Nenhuma biblioteca 3D — a cena é um campo de distâncias assinadas (SDF)
-   avaliado por pixel: giroide morfando dentro de uma esfera, com sombra
+   avaliado por pixel: prisma triangular de cristal com uma giroide pulsando
+   dentro e um mini-prisma sólido girando ao contrário no núcleo — com sombra
    suave, AO e névoa. Câmera orbital: auto-rotação + arraste do usuário.
    Cores lidas dos tokens do tema (--accent/--background) via elemento-probe,
    atualizadas quando o tema muda (MutationObserver na classe do <html>). */
@@ -33,17 +34,39 @@ float gyroid(vec3 p, float s, float th) {
   return (abs(dot(sin(p * s), cos(p.zxy * s))) - th) / s;
 }
 
+// Prisma triangular (seção em XY, extrudado em Z) — iq
+float sdTriPrism(vec3 p, vec2 h) {
+  vec3 q = abs(p);
+  return max(q.z - h.y, max(q.x * 0.866025 + p.y * 0.5, -p.y) - h.x * 0.5);
+}
+
+mat2 rot2(float a) {
+  float c = cos(a), s = sin(a);
+  return mat2(c, -s, s, c);
+}
+
 float map(vec3 p) {
-  // Torção leve do domínio para a malha respirar
-  vec3 q = p;
-  q.xy += 0.32 * sin(q.z * 1.3 + u_time * 0.3);
-  float s = 7.0 + 1.4 * sin(u_time * 0.18);
-  float th = 0.68 + 0.24 * sin(u_time * 0.25);
-  float g = gyroid(q, s, th);
-  // Casca: giroide recortada por uma esfera (borda suave via anti-aliased SDF)
-  float shell = max(length(p) - 1.55, g + 0.03 * abs(g));
-  // Núcleo: esfera pequena e sólida no centro
-  return min(shell, length(p) - 0.13);
+  // Cristal em pé, girando em torno do próprio eixo vertical (Y)
+  float ang = u_time * 0.18;
+  vec3 r = p;
+  r.xz = rot2(ang) * r.xz;
+
+  // Casca: seção triangular no plano horizontal, extrudada em Y
+  // (troca y↔z: o sdTriPrism nativo tem a seção em XY e extruda em Z)
+  float prism = sdTriPrism(vec3(r.x, r.z, r.y), vec2(1.7 + 0.06 * sin(u_time * 0.22), 1.05));
+
+  // Giroide viva acondicionada dentro do prisma: cristal com malha interna
+  vec3 w = r;
+  w.xy += 0.24 * sin(w.z * 1.3 + u_time * 0.3);
+  float s = 7.5 + 1.2 * sin(u_time * 0.18);
+  float th = 0.55 + 0.18 * sin(u_time * 0.25);
+  float g = gyroid(w, s, th);
+  float shell = max(prism, g + 0.03 * abs(g));
+
+  // Núcleo: prisma sólido pequeno girando ao contrário
+  vec3 c = p;
+  c.xz = rot2(-ang * 1.7) * c.xz;
+  return min(shell, sdTriPrism(vec3(c.x, c.z, c.y), vec2(0.55, 0.36)));
 }
 
 vec3 calcNormal(vec3 p) {
@@ -168,7 +191,10 @@ export function Raymarcher() {
     const vert = compile(gl, gl.VERTEX_SHADER, VERT);
     const frag = compile(gl, gl.FRAGMENT_SHADER, FRAG);
     const program = vert && frag ? gl.createProgram() : null;
-    if (!vert || !frag || !program) return;
+    if (!vert || !frag || !program) {
+      setSupported(false); // canvas preto mudo não conta história
+      return;
+    }
     gl.attachShader(program, vert);
     gl.attachShader(program, frag);
     gl.linkProgram(program);
@@ -216,7 +242,7 @@ export function Raymarcher() {
 
     // Órbita: theta (azimute), phi (elevação)
     let theta = 0.9;
-    let phi = 0.32;
+    let phi = 0.42; // vista 3/4: mostra a face triangular do topo
     let time = 0;
     let dragging = false;
     let lastX = 0;
@@ -248,7 +274,7 @@ export function Raymarcher() {
       raf = 0;
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
-      if (!dragging) theta += dt * 0.25;
+      if (!dragging) theta += dt * 0.12; // o prisma já gira sozinho — câmera mais calma
       time += dt;
       render();
       if (!paused && visible && raf === 0) raf = requestAnimationFrame(frame);
@@ -312,7 +338,8 @@ export function Raymarcher() {
       element.removeEventListener("pointercancel", onUp);
       element.removeEventListener("webglcontextlost", onLost);
       probe.remove();
-      context.getExtension("WEBGL_lose_context")?.loseContext();
+      // Sem loseContext(): o StrictMode desmonta/remonta em dev e o canvas só tem
+      // um contexto a vida toda — matar aqui deixaria a 2ª montada com shader morto.
     };
   }, [paused]);
 

@@ -119,7 +119,7 @@ export function DataRace() {
   const displayYear = Math.floor(year);
 
   return (
-    <section id="race" className="border-t border-border bg-surface">
+    <section id="race" className="border-t border-border bg-surface/80">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <h2 data-reveal className="text-2xl font-semibold tracking-tight sm:text-3xl">
           {d.lab.race.title}

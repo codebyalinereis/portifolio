@@ -480,3 +480,87 @@ body {
     transition: none;
   }
 }
+
+/* ---------- /lab: cenário de fundo (100% CSS, zero JS) ---------- */
+.lab-backdrop {
+  --lab-line: color-mix(in srgb, var(--accent) 22%, transparent);
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.dark .lab-backdrop {
+  --lab-line: color-mix(in srgb, var(--accent) 34%, transparent);
+}
+.lab-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(70% 45% at 50% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%);
+}
+.lab-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--lab-line) 1px, transparent 1.5px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(120% 85% at 50% -10%, black 25%, transparent 75%);
+}
+/* Grade em perspectiva fluindo em direção ao observador */
+.lab-grid {
+  position: absolute;
+  left: -30%;
+  right: -30%;
+  bottom: 0;
+  height: 60vh;
+  background-image:
+    linear-gradient(to right, var(--lab-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--lab-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  transform: perspective(480px) rotateX(60deg);
+  transform-origin: bottom center;
+  animation: lab-grid-flow 2.6s linear infinite;
+  mask-image: linear-gradient(to bottom, transparent 35%, rgba(0, 0, 0, 0.85) 90%, black);
+}
+@keyframes lab-grid-flow {
+  to {
+    background-position: 0 64px, 0 64px;
+  }
+}
+.lab-horizon {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: calc(60vh - 1px);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent) 35% 65%, transparent);
+  opacity: 0.18;
+}
+.dark .lab-horizon {
+  opacity: 0.42;
+}
+/* Varredura vertical sutil */
+.lab-scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 30vh;
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--accent) 8%, transparent), transparent);
+  animation: lab-scan 11s linear infinite;
+}
+@keyframes lab-scan {
+  from {
+    transform: translateY(-40vh);
+  }
+  to {
+    transform: translateY(120vh);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lab-grid,
+  .lab-scan {
+    animation: none;
+  }
+  .lab-scan {
+    display: none;
+  }
+}

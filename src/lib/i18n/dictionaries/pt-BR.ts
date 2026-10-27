@@ -162,7 +162,7 @@ export const ptBR = {
     shader: {
       title: "Escultura procedural",
       subtitle:
-        "Raymarching em GLSL puro, sem three.js: a geometria é um campo de distâncias assinadas (giroide morfando dentro de uma esfera) e cada pixel marcha um raio até achar a superfície — com sombra suave, oclusão ambiental e névoa. Arraste para orbitar.",
+        "Raymarching em GLSL puro, sem three.js: a geometria é um campo de distâncias assinadas — um prisma de cristal com uma malha pulsando dentro e um núcleo girando ao contrário — e cada pixel marcha um raio até achar a superfície, com sombra suave, oclusão ambiental e névoa. Arraste para orbitar.",
       pause: "Pausar",
       play: "Retomar",
       hint: "Arraste para orbitar a câmera",
