@@ -158,7 +158,26 @@ export const ptBR = {
 
   lab: {
     title: "Lab",
-    subtitle: "Experimentos interativos feitos à mão com canvas e React — mexa, clique, brinque.",
+    subtitle: "Experimentos interativos feitos à mão com canvas, WebGL e React — mexa, clique, brinque.",
+    shader: {
+      title: "Escultura procedural",
+      subtitle:
+        "Raymarching em GLSL puro, sem three.js: a geometria é um campo de distâncias assinadas (giroide morfando dentro de uma esfera) e cada pixel marcha um raio até achar a superfície — com sombra suave, oclusão ambiental e névoa. Arraste para orbitar.",
+      pause: "Pausar",
+      play: "Retomar",
+      hint: "Arraste para orbitar a câmera",
+      unsupported: "Seu navegador não suporta WebGL — a escultura não pôde ser renderizada.",
+    },
+    fourier: {
+      title: "Fourier desenha",
+      subtitle:
+        "Desenhe na área da esquerda: a curva passa por uma transformada de Fourier (DFT escrita à mão) e a máquina de círculos engatados a redesenha na direita — cada círculo é uma frequência da sua curva.",
+      draw: "Desenhe aqui com o mouse ou o dedo",
+      machine: "Máquina de Fourier — círculos engatados redesenhando",
+      harmonics: "Círculos",
+      preset: "Exemplo",
+      note: "Menos círculos = mais abstração. Veja sua assinatura virar arte.",
+    },
     flow: {
       title: "Campo de fluxo",
       subtitle: "Partículas navegando um campo de ruído procedural. O cursor atrai; o clique explode.",

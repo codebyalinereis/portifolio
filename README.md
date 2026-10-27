@@ -1,6 +1,6 @@
 # Portfólio — Aline Reis · Full Stack & Dados
 
-Portfólio pessoal full stack com **Lab interativo**: experimentos de canvas generativo, uma corrida de dados (bar chart race) e um jogo da memória da stack, feitos à mão com React — sem bibliotecas de efeito. O conteúdo do site (projetos, skills, experiências, mensagens) vive no PostgreSQL e é gerido por um painel admin próprio.
+Portfólio pessoal full stack com **Lab interativo**: escultura procedural em raymarching WebGL, campo de fluxo generativo, corrida de dados (bar chart race), máquina de Fourier que redesenha o seu traço e um jogo da memória da stack — tudo feito à mão com React, sem bibliotecas de efeito. O conteúdo do site (projetos, skills, experiências, mensagens) vive no PostgreSQL e é gerido por um painel admin próprio.
 
 ## Stack
 
@@ -9,8 +9,9 @@ Portfólio pessoal full stack com **Lab interativo**: experimentos de canvas gen
 - **Tailwind CSS v4** (tokens de cor no CSS, dark mode via `next-themes`)
 - **iron-session** (cookie selado httpOnly) + **bcryptjs** + rate-limit in-memory
 - i18n pt-BR/EN por dicionários TS + cookie (sem rotas por locale)
-- Efeitos próprios em CSS/canvas 2D: aurora, constelação interativa, spotlight+tilt,
-  scroll reveal, barra de progresso, marquee, typewriter, campo de fluxo, corrida de barras, flip 3D
+- Efeitos próprios em CSS/canvas 2D/WebGL: aurora, constelação interativa, spotlight+tilt,
+  scroll reveal, barra de progresso, marquee, typewriter, campo de fluxo, corrida de barras,
+  flip 3D, raymarching GLSL (SDF), epicycles de Fourier (DFT escrita à mão)
 
 ## Rodando localmente (Windows)
 
@@ -64,11 +65,13 @@ A senha do admin é **a que você definir** no `ADMIN_PASSWORD_HASH_B64` (comand
 | `/` | One-page: hero com typewriter, marquee do stack, sobre, skills com níveis, projetos, experiência, contato |
 | `/projects` | Projetos completos com filtro por stack |
 | `/projects/[slug]` | Estudo de caso do projeto: contexto, solução, bastidores e resultados (bilíngue) |
-| `/lab` | **Lab interativo**: campo de fluxo generativo em canvas (cursor atrai, clique explode, densidade e paleta ajustáveis) + corrida de dados (bar chart race com scrubber de anos) + jogo da memória da stack com recorde |
+| `/lab` | **Lab interativo**: escultura procedural em raymarching WebGL (giroide SDF, arraste para orbitar) + campo de fluxo generativo (cursor atrai, clique explode) + corrida de dados (bar chart race) + máquina de Fourier (desenhe e veja os círculos redesenharem) + jogo da memória |
 | `/admin` | Painel CRUD (projetos, skills, experiências, mensagens) — login em `/admin/login` |
 
 ### Interações (o coração do front)
 
+- **Escultura procedural** (`/lab`): raymarching em GLSL puro (sem three.js) — SDF de giroide morfando dentro de uma esfera, sombra suave, AO e névoa; câmera orbital com auto-rotação e arraste; cores lidas dos tokens do tema.
+- **Máquina de Fourier** (`/lab`): desenhe à mão; a curva é reamostrada por comprimento de arco, passa por uma DFT O(N²) escrita no componente e é redesenhada por círculos engatados animados.
 - **Campo de fluxo** (`/lab`): partículas seguem um campo de ângulos procedural (senoides compostas), rastro em cometa, atração pelo cursor e explosão no clique — canvas 2D puro, dpr-aware.
 - **Corrida de dados** (`/lab`): bar chart race 2010–2026 com interpolação linear entre keyframes, ranking animado em CSS transforms e scrubber de anos; paleta validada para daltonismo nos dois temas e cor fixa por linguagem.
 - **Jogo da memória** (`/lab`): 8 pares da stack, flip 3D em CSS puro, cronômetro e recorde no `localStorage`.

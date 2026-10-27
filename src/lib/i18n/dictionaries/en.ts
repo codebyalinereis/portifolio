@@ -160,7 +160,26 @@ export const en: Dictionary = {
 
   lab: {
     title: "Lab",
-    subtitle: "Interactive experiments handmade with canvas and React — move, click, play.",
+    subtitle: "Interactive experiments handmade with canvas, WebGL and React — move, click, play.",
+    shader: {
+      title: "Procedural sculpture",
+      subtitle:
+        "Raymarching in pure GLSL, no three.js: the geometry is a signed distance field (a gyroid morphing inside a sphere) and every pixel marches a ray until it finds the surface — with soft shadows, ambient occlusion and fog. Drag to orbit.",
+      pause: "Pause",
+      play: "Resume",
+      hint: "Drag to orbit the camera",
+      unsupported: "Your browser doesn't support WebGL — the sculpture could not be rendered.",
+    },
+    fourier: {
+      title: "Fourier draws",
+      subtitle:
+        "Draw on the left pad: your curve goes through a Fourier transform (a hand-written DFT) and the epicycle machine redraws it on the right — each circle is one frequency of your curve.",
+      draw: "Draw here with mouse or finger",
+      machine: "Fourier machine — chained circles redrawing",
+      harmonics: "Circles",
+      preset: "Example",
+      note: "Fewer circles = more abstraction. Watch your signature become art.",
+    },
     flow: {
       title: "Flow field",
       subtitle: "Particles sailing a procedural noise field. The cursor attracts; a click bursts.",
