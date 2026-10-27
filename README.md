@@ -66,10 +66,12 @@ A senha do admin é **a que você definir** no `ADMIN_PASSWORD_HASH_B64` (comand
 | `/projects` | Projetos completos com filtro por stack |
 | `/projects/[slug]` | Estudo de caso do projeto: contexto, solução, bastidores e resultados (bilíngue) |
 | `/lab` | **Lab interativo**: escultura procedural em raymarching WebGL (giroide SDF, arraste para orbitar) + campo de fluxo generativo (cursor atrai, clique explode) + corrida de dados (bar chart race) + máquina de Fourier (desenhe e veja os círculos redesenharem) + jogo da memória |
+| `/ia` | **IA na prática**: princípios de uso de IA em produção + playground de rede neural treinando ao vivo (MLP 2-8-8-1 com backprop escrita à mão — pinte pontos, treine, veja a fronteira de decisão e a curva de perda) + ponte pro estudo de caso de NLP |
 | `/admin` | Painel CRUD (projetos, skills, experiências, mensagens) — login em `/admin/login` |
 
 ### Interações (o coração do front)
 
+- **Playground de rede neural** (`/ia`): MLP 2-8-8-1 com forward/backprop escritos à mão (zero libs de ML) — o usuário pinta pontos de duas classes (botão direito inverte), carrega presets (espiral, XOR, anéis), treina ao vivo e vê o heatmap da fronteira de decisão aprender junto com a curva de perda BCE.
 - **Escultura procedural** (`/lab`): raymarching em GLSL puro (sem three.js) — SDF de prisma de cristal com giroide pulsando dentro e núcleo contra-rotativo, sombra suave, AO e névoa; câmera orbital com auto-rotação e arraste; cores lidas dos tokens do tema.
 - **Máquina de Fourier** (`/lab`): desenhe à mão; a curva é reamostrada por comprimento de arco, passa por uma DFT O(N²) escrita no componente e é redesenhada por círculos engatados animados.
 - **Campo de fluxo** (`/lab`): partículas seguem um campo de ângulos procedural (senoides compostas), rastro em cometa, atração pelo cursor e explosão no clique — canvas 2D puro, dpr-aware.

@@ -13,6 +13,7 @@ export const ptBR = {
     about: "Sobre",
     skills: "Skills",
     projects: "Projetos",
+    ai: "IA",
     experience: "Experiência",
     education: "Formação",
     contact: "Contato",
@@ -179,6 +180,43 @@ export const ptBR = {
   notFound: {
     title: "Página não encontrada",
     subtitle: "O endereço acessado não existe (ou mudou de lugar).",
+  },
+
+  ai: {
+    title: "IA na prática",
+    subtitle:
+      "Uma rede neural de verdade, treinando no seu navegador: backpropagation escrita à mão em TypeScript, sem bibliotecas de ML. Pinte pontos, aperte treinar e veja a fronteira de decisão nascer.",
+    principlesTitle: "Como eu uso IA",
+    principles: [
+      "Regra primeiro — IA quando a regra quebra",
+      "Copiloto, não piloto: humano decide o que custa caro",
+      "Métrica antes do deploy: baseline, dataset e versão",
+      "Erro esperado: score de confiança e trilha de auditoria",
+    ],
+    playground: {
+      title: "Playground: rede neural ao vivo",
+      architecture: "2 → 8 → 8 → 1 · tanh · sigmoide · entropia cruzada — backprop escrito à mão",
+      hint: "Clique ou arraste para pintar pontos — botão direito pinta a outra classe",
+      train: "Treinar",
+      pause: "Pausar",
+      resetNet: "Reiniciar rede",
+      clearPoints: "Limpar pontos",
+      classA: "Classe A",
+      classB: "Classe B",
+      presets: "Exemplos",
+      presetSpiral: "Espiral",
+      presetXor: "XOR",
+      presetRings: "Círculos",
+      epoch: "Época",
+      loss: "Perda (BCE)",
+      needBoth: "Pinte pontos das duas classes para treinar",
+      canvasLabel: "Área do playground de rede neural",
+      chartLabel: "Curva de perda",
+    },
+    caseTitle: "IA em produção",
+    caseText:
+      "Classificação com NLP sugerindo cadastros com score de confiança — decisão final sempre humana. O estudo de caso completo:",
+    caseLink: "Ver o estudo de caso",
   },
 
   lab: {

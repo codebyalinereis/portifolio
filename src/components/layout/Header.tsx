@@ -66,6 +66,7 @@ export function Header() {
   const links = [
     { href: "/", label: d.nav.home },
     { href: "/projects", label: d.nav.projects },
+    { href: "/ia", label: d.nav.ai },
     { href: "/lab", label: d.nav.lab },
   ];
 

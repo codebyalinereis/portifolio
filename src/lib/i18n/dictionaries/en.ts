@@ -15,6 +15,7 @@ export const en: Dictionary = {
     about: "About",
     skills: "Skills",
     projects: "Projects",
+    ai: "AI",
     experience: "Experience",
     education: "Education",
     contact: "Contact",
@@ -181,6 +182,43 @@ export const en: Dictionary = {
   notFound: {
     title: "Page not found",
     subtitle: "The address you accessed doesn't exist (or has moved).",
+  },
+
+  ai: {
+    title: "AI in practice",
+    subtitle:
+      "A real neural network, training in your browser: hand-written backpropagation in TypeScript, no ML libraries. Paint some points, hit train and watch the decision boundary being born.",
+    principlesTitle: "How I use AI",
+    principles: [
+      "Rules first — AI when rules break",
+      "Copilot, not autopilot: humans decide what's costly",
+      "Metrics before deploy: baseline, dataset and version",
+      "Errors expected: confidence score and audit trail",
+    ],
+    playground: {
+      title: "Playground: neural network live",
+      architecture: "2 → 8 → 8 → 1 · tanh · sigmoid · cross-entropy — hand-written backprop",
+      hint: "Click or drag to paint points — right-click paints the other class",
+      train: "Train",
+      pause: "Pause",
+      resetNet: "Reset network",
+      clearPoints: "Clear points",
+      classA: "Class A",
+      classB: "Class B",
+      presets: "Examples",
+      presetSpiral: "Spiral",
+      presetXor: "XOR",
+      presetRings: "Rings",
+      epoch: "Epoch",
+      loss: "Loss (BCE)",
+      needBoth: "Paint points of both classes to train",
+      canvasLabel: "Neural network playground area",
+      chartLabel: "Loss curve",
+    },
+    caseTitle: "AI in production",
+    caseText:
+      "NLP classification suggesting records with a confidence score — the final call is always human. The full case study:",
+    caseLink: "Read the case study",
   },
 
   lab: {

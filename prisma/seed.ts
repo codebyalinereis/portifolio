@@ -234,7 +234,7 @@ Critical routines running in production with sustained data quality and availabi
         "Microservice with a product-description segmentation engine (NLP) that suggests classifications and enriches records, with a database-loaded dictionary and SQL training corpus.",
       detail: `## Contexto
 
-Cadastros com descrições em texto livre: cada pessoa escreve o mesmo produto de um jeito, e classificar tudo na mão não escala com o volume.
+Cadastros com descrições em texto livre: cada pessoa escreve o mesmo produto de um jeito, e classificar tudo na mão não escala com o volume. A regra simples — dicionário fixo de sinônimos — já tinha sido tentada e quebrava a cada descrição nova; o time voltava pra conferência manual.
 
 ## A solução
 
@@ -243,18 +243,18 @@ Um microsserviço com motor de classificação por NLP:
 - Segmentação de descrições (tokenização, normalização e remoção de ruído) para "entender" o texto
 - Dicionário de termos carregado do banco — regra nova entra por dado, sem redeploy
 - Corpus de treino versionado em SQL, com métricas de acerto por versão
-- Endpoint que sugere classificações e enriquece o cadastro sob demanda
+- Score de confiança na resposta: abaixo do corte, vira fila humana em vez de palpite
 
 ## Bastidores
 
-Java + Spring Boot porque o ecossistema da integração já falava JVM. O NLP em si é engenharia de features: quanto melhor o dicionário, menos o modelo precisa adivinhar. A resposta volta com o score da sugestão para o humano decidir — automação como copiloto, não como decisão final.
+O desenho saiu de refinamento funcional com o time de operação: sentamos com quem classificava na mão, mapeamos os casos ambíguos e definimos o que a máquina decide sozinha versus o que sobe pra humano. Java + Spring Boot porque o ecossistema da integração já falava JVM. O NLP em si é engenharia de features: quanto melhor o dicionário, menos o modelo precisa adivinhar — e a resposta volta com o score para a pessoa decidir. Copiloto, não decisão final.
 
 ## Resultados
 
-Classificação de cadastros acelerada com sugestões auditáveis e um catálogo mais consistente ao longo do tempo.`,
+Classificação de cadastros acelerada com sugestões auditáveis, acerto medido a cada versão do corpus e um catálogo mais consistente ao longo do tempo — sem delegar ao algoritmo o que custa caro errar.`,
       detailEn: `## Context
 
-Records with free-text descriptions: everyone writes the same product differently, and classifying everything by hand doesn't scale with volume.
+Records with free-text descriptions: everyone writes the same product differently, and classifying everything by hand doesn't scale with volume. The simple approach — a fixed synonym dictionary — had already been tried and broke with every new description; the team went back to manual checking.
 
 ## The solution
 
@@ -263,15 +263,15 @@ A microservice with an NLP classification engine:
 - Description segmentation (tokenization, normalization and noise removal) so the text can be "understood"
 - A term dictionary loaded from the database — new rules arrive as data, no redeploy
 - A training corpus versioned in SQL, with per-version accuracy metrics
-- An endpoint that suggests classifications and enriches records on demand
+- A confidence score on every response: below the cutoff, it goes to a human queue instead of a guess
 
 ## Behind the scenes
 
-Java + Spring Boot because the surrounding integration ecosystem already spoke JVM. The NLP itself is feature engineering: the better the dictionary, the less the model has to guess. Responses come back with a match score for a human to decide — automation as a copilot, not as the final call.
+The design came out of functional refinement with the operations team: we sat with the people who classified by hand, mapped the ambiguous cases and defined what the machine decides on its own versus what gets escalated to a human. Java + Spring Boot because the surrounding integration ecosystem already spoke JVM. The NLP itself is feature engineering: the better the dictionary, the less the model has to guess — and every response carries its score for a person to decide. Copilot, not the final call.
 
 ## Results
 
-Faster record classification with auditable suggestions and a catalog that stays more consistent over time.`,
+Faster record classification with auditable suggestions, accuracy measured on every corpus version and a catalog that stays more consistent over time — without delegating to the algorithm what is expensive to get wrong.`,
       featured: false,
       order: 4,
       techs: ["Java", "Spring Boot", "PostgreSQL", "NLP & Processamento de Texto"],
