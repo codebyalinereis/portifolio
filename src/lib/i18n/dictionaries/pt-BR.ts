@@ -172,8 +172,9 @@ export const ptBR = {
       title: "Fourier desenha",
       subtitle:
         "Desenhe na área da esquerda: a curva passa por uma transformada de Fourier (DFT escrita à mão) e a máquina de círculos engatados a redesenha na direita — cada círculo é uma frequência da sua curva.",
-      draw: "Desenhe aqui com o mouse ou o dedo",
-      machine: "Máquina de Fourier — círculos engatados redesenhando",
+      draw: "Você desenha aqui — mouse ou dedo",
+      drawHint: "✏️ Desenhe aqui",
+      machine: "A máquina desenha aqui (Fourier)",
       harmonics: "Círculos",
       preset: "Exemplo",
       note: "Menos círculos = mais abstração. Veja sua assinatura virar arte.",

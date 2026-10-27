@@ -96,6 +96,7 @@ export function FourierDraw() {
   const resetRef = useRef<() => void>(() => {});
   const lastStrokeRef = useRef<Point[] | null>(null);
   const [harmonics, setHarmonics] = useState(72);
+  const [hasDrawn, setHasDrawn] = useState(false);
 
   useEffect(() => {
     const pad = padRef.current;
@@ -247,6 +248,7 @@ export function FourierDraw() {
     }
 
     function step(now: number, last: number) {
+      raf = 0; // id volta a 0 a cada frame — o loop pode renascer via IntersectionObserver
       const dt = Math.min(0.05, (now - last) / 1000);
       time += dt;
       draw();
@@ -267,7 +269,10 @@ export function FourierDraw() {
       if (reduced) drawStatic();
     }
 
-    // Último traço do usuário (sobrevive a trocas de harmônicos) ou coração
+    // Último traço do usuário (sobrevive a trocas de harmônicos) ou coração.
+    // resize() síncrono: ResizeObserver dispara async — sem isso, o primeiro
+    // frame desenharia com width/height = 0.
+    resize();
     setStroke(lastStrokeRef.current ?? heart(256));
 
     const io = new IntersectionObserver((entries) => {
@@ -288,6 +293,7 @@ export function FourierDraw() {
     }
     function onDown(event: PointerEvent) {
       drawing = true;
+      setHasDrawn(true);
       stroke.length = 0;
       padEl.setPointerCapture(event.pointerId);
       const p = localPoint(event);
@@ -338,13 +344,22 @@ export function FourierDraw() {
 
         <div data-reveal className="mt-6 grid gap-4 md:grid-cols-2">
           <div className="overflow-hidden rounded-xl border border-border bg-surface">
-            <canvas
-              ref={padRef}
-              className="block h-[320px] w-full cursor-crosshair touch-none"
-              aria-label={d.lab.fourier.draw}
-            />
+            <div className="relative">
+              <canvas
+                ref={padRef}
+                className="block h-[320px] w-full cursor-crosshair touch-none"
+                aria-label={d.lab.fourier.draw}
+              />
+              {hasDrawn ? null : (
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                  <span className="rounded-full border border-dashed border-accent/50 bg-background/80 px-4 py-1.5 text-sm text-muted">
+                    {d.lab.fourier.drawHint}
+                  </span>
+                </div>
+              )}
+            </div>
             <p className="flex items-center gap-1.5 border-t border-border px-4 py-2 text-xs text-muted">
-              <Pencil className="h-3 w-3" aria-hidden="true" /> {d.lab.fourier.draw}
+              <Pencil className="h-3 w-3 text-accent" aria-hidden="true" /> {d.lab.fourier.draw}
             </p>
           </div>
           <div className="overflow-hidden rounded-xl border border-border bg-background">

@@ -174,8 +174,9 @@ export const en: Dictionary = {
       title: "Fourier draws",
       subtitle:
         "Draw on the left pad: your curve goes through a Fourier transform (a hand-written DFT) and the epicycle machine redraws it on the right — each circle is one frequency of your curve.",
-      draw: "Draw here with mouse or finger",
-      machine: "Fourier machine — chained circles redrawing",
+      draw: "You draw here — mouse or finger",
+      drawHint: "✏️ Draw here",
+      machine: "The machine draws here (Fourier)",
       harmonics: "Circles",
       preset: "Example",
       note: "Fewer circles = more abstraction. Watch your signature become art.",
