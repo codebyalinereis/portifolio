@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { RotateCcw, Trophy } from "lucide-react";
 import { useI18n } from "@/contexts/LocaleProvider";
+import { useMounted } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 
 type Pair = { key: string; emoji: string; name: string };
@@ -63,13 +64,16 @@ function shuffle(deck: Card[]): Card[] {
   return copy;
 }
 
-function buildDeck(): Card[] {
-  return shuffle(
-    PAIRS.flatMap((pair) => [
-      { ...pair, id: Math.random() },
-      { ...pair, id: Math.random() },
-    ])
-  );
+/* Baralho canônico (ordem fixa, ids estáveis) no SSR e na primeira renderização
+   do cliente — hidratação idêntica ao HTML do servidor. Embaralha só depois do
+   mount: Math.random() nunca entra num render que o servidor também renderiza
+   (mismatch de hidratação). As costas das cartas são iguais, a troca é invisível. */
+function buildDeck(shuffled: boolean): Card[] {
+  const base = PAIRS.flatMap((pair, index) => [
+    { ...pair, id: index * 2 + 1 },
+    { ...pair, id: index * 2 + 2 },
+  ]);
+  return shuffled ? shuffle(base) : base;
 }
 
 /**
@@ -78,8 +82,10 @@ function buildDeck(): Card[] {
  */
 export function MemoryGame() {
   const { d } = useI18n();
+  const mounted = useMounted();
   const best = useSyncExternalStore(subscribeBest, bestSnapshot, () => null);
-  const [deck, setDeck] = useState<Card[]>(buildDeck);
+  const [rounds, setRounds] = useState(0);
+  const deck = useMemo<Card[]>(() => buildDeck(mounted || rounds > 0), [mounted, rounds]);
   const [flipped, setFlipped] = useState<number[]>([]);
   const [matched, setMatched] = useState<Set<string>>(new Set());
   const [moves, setMoves] = useState(0);
@@ -99,7 +105,7 @@ export function MemoryGame() {
 
   const reset = useCallback(() => {
     if (unflipTimer.current) clearTimeout(unflipTimer.current);
-    setDeck(buildDeck());
+    setRounds((rounds) => rounds + 1);
     setFlipped([]);
     setMatched(new Set());
     setMoves(0);
